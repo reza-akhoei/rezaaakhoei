@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on My personal website</title>
+    <link>/tags/</link>
+    <description>Recent content in Tags on My personal website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 16 Oct 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bibliometrix</title>
+      <link>/tags/bibliometrix/</link>
+      <pubDate>Sun, 16 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/bibliometrix/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>PubMed Data base</title>
+      <link>/tags/pubmed-data-base/</link>
+      <pubDate>Sun, 16 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/pubmed-data-base/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rstudio</title>
+      <link>/tags/rstudio/</link>
+      <pubDate>Sun, 16 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/rstudio/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>scientometrix</title>
+      <link>/tags/scientometrix/</link>
+      <pubDate>Sun, 16 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/scientometrix/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

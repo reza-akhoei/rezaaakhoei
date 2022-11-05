@@ -1,6 +1,6 @@
 ---
 title: Scientometrics Analysis of RStudio applications in PubMed Database
-author: Reza AA Khoei
+author: Reza Khoei
 date: '2022-10-16'
 format: hugo
 draft: false
@@ -41,7 +41,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-Evaluation and interpretation of scientific productions can be so helpful in determination of prominent authors, active departments and hot topics in a specific field. This process is called **scientometrics** and **bibliometrix**. Scientometrics refers to "all quantitative aspects science and scientific research" [@sengupta1992]. On the other hand, Bibliometrics refers to "the application of mathematics and statistical methods to books and other forms of written communication" [@pritchard1969]. Visualization and Statistical methods of these published documents can be analyzed using **R bibliometrix package**. This package is created and developed by [Massimo Aria](https://masimoaria.com/) and [Corrado Coccurullo](https://www.corradococcurullo.com/).
+Evaluation and interpretation of scientific productions can be so helpful in determination of prominent authors, active departments and hot topics in a specific field. This process is called **scientometrics** and **bibliometrix**. Scientometrics refers to "all quantitative aspects science and scientific research" [@sengupta1992]. On the other hand, Bibliometrics refers to "the application of mathematics and statistical methods to books and other forms of written communication" [@pritchard1969]. Visualization and Statistical methods of these published documents can be analyzed using **R bibliometrix package**. This package is created and developed by Massimo Aria(https://masimoaria.com/) and Corrado Coccurullo(https://www.corradococcurullo.com/).
 
 Our purpose is to investigate the *RStudio* applications of published scientific papers of *PubMed database*. In order to, we used *bibliometrix package* in *Rstudio*.
 
@@ -79,7 +79,7 @@ res <- pmQueryTotalCount(query = query, api_key = api_key)
 res$total_count
 ```
 
-An API key is required to better and faster searches.Nevertheless, NULL can be put instead of a specific value.
+An API key is required to better and faster searches. Nevertheless, NULL can be put instead of a specific value.
 
 As, RStudio and R programming language are interchangeably used, then both of them are considered in search strategy. After determining the search strategy we searched and finally found `r res$total_count` documents based on searched terms including articles, book chapters, conference papers and etc.
 

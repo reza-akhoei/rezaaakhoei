@@ -8,7 +8,7 @@ intro: "My name is Reza Ali Akbari Khoei (Reza A.A. Khoei). You can abbreviately
   call me Reza Khoei. I have PhD in **Biostatistics**. \n\n I had no idea about creating 
   websites till I found out that it is possible using [R](https://cran.r-project.org/). This
   fact made me motivated to create my own blog and got started blogging about what I've 
-  learned and what I think can be usefull for others.
+  learned and what I think can be useful for others.
   
   
   \n This blog is built using 

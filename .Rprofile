@@ -19,5 +19,9 @@ options(
   blogdown.method = 'html'
 )
 
+# default author, default subdirectory and default file type
+options(blogdown.ext = ".Rmd", blogdown.author = "Reza Khoei",
+        blogdown.subdir = "blog")
+
 # fix Hugo version
 options(blogdown.hugo.version = "0.104.3")

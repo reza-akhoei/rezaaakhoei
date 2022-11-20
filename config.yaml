@@ -33,7 +33,7 @@ params:
   custom_theme: ''
   customheadingFontFamily: Fraunces
   customtextFontFamily: Commissioner
-  description: A modern, beautiful, and easily configurable blog theme for Hugo.
+  description: A website about R, statistics and data science
   favicon: /img/R.jfif
   headingFontFamily: sans-serif
   logo: /img/R.jfif

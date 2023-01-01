@@ -1,0 +1,288 @@
+---
+title: Resume
+author: Reza Khoei
+date: '2022-12-28'
+slug: []
+categories: []
+tags: []
+output: 
+   blogdown::html_page:
+     toc: true
+     number_sections: true
+---
+
+
+Aside
+================================================================================
+
+![Reza Khoei](G:/rezaaakhoei/content/MyImage.png){width=80%}
+
+Contact Info {#contact}
+--------------------------------------------------------------------------------
+
+- <i class="fa fa-envelope"></i> reza.akhoei@gmail.com
+- <i class="fa fa-github"></i> [github.com/reza-akhoei](https://github.com/reza-akhoei)
+- <i class="fa fa-phone"></i> +989141638121
+- <i class="fa fa-blog"></i>
+- For more information, please visit
+[My website](**rezaaakhoei.rbind.io**)
+
+
+Skills {#skills}
+--------------------------------------------------------------------------------
+- Highly skilled in **R**, **rmarkdown**,**SPSS**, **STATA** and **WinBugs(OpenBugs)** 
+
+- Experienced in machine learning models, Text Mining Methods.
+
+- Full Experience with Survival Analysis **(my M.S. thesis)**
+
+- Full experience with Count Data Analysis with **Bayesian Approach** **(my PhD dissertation)**.
+
+
+
+
+
+
+
+
+
+
+Disclaimer {#disclaimer}
+--------------------------------------------------------------------------------
+
+This resume was made with the R package [**pagedown**](https://github.com/rstudio/pagedown).
+
+Last updated on `r Sys.Date()`.
+
+
+
+Main
+================================================================================
+
+Reza Ali Akbari Khoei {#title}
+--------------------------------------------------------------------------------
+
+### Currently searching for a assistant professor position
+
+Please note that this is a *real* resume, and I'm really looking for a assistant professor position at the moment. If you are
+interested in my background and skills, please feel free to contact me.
+
+
+Education {data-icon=graduation-cap data-concise=true}
+--------------------------------------------------------------------------------
+
+### University of Tabriz
+
+B.S. in Statistics
+
+Tabriz, Iran
+
+2008 - 2012
+
+
+
+
+
+
+### University of Social Welfare and Rehabilitation Sciences
+
+M.S. in Biostatistics
+
+Tehran, Iran
+
+2012 - 2014
+
+**Thesis:** Application of Cure Models in thalassemia major disease
+
+
+
+### Tarbiat Modares University
+
+PhD. in Biostatistics
+
+Tehran, Iran
+
+2016 - 2020
+
+**Dissertation:** Bayesian Approach in Zero-inflated Double Poisson Modeling and its Application in Medical Data
+
+
+Research Experience {data-icon=laptop}
+--------------------------------------------------------------------------------
+
+### Statistician and Biostatistician
+
+Research Development and Coordination Center (RDCC), Tabriz Unuversity of Medical Sciences
+
+Tabriz, Iran
+
+2020 - present
+
+- Performing statistical analysis for researchers and students:
+methods such as regression models and meta analysis etc.
+
+- Teaching statistical methods ans statistical softwares such as R and SPSS for researchers
+
+- Statistical Consultations for proposals of students and researchers
+
+
+  
+
+Professional Experience {data-icon=suitcase}
+--------------------------------------------------------------------------------
+
+### Biostatistician
+
+Research Development and Coordination Center (RDCC), Tabriz University of Medical Sciences
+
+Tabriz, Iran
+
+2020 - present
+
+::: concise
+- Statistical consulting to researchers
+- Wrote statistical reports of data using rmarkdown (a package in R) in forms of word, pdf and HTML.
+- Scientometric analysis of information of databases such as Scopus and PubMed
+- Currently working on fMRI (functional magnetic resonance imaging) data as a  member of a research team
+:::
+
+
+::: concise
+- Taught **R programming language** to beginners
+- Taught **SPSS** to students
+:::
+
+
+Teaching Experience {data-icon=chalkboard-teacher}
+--------------------------------------------------------------------------------
+
+## Workshops
+
+### Basics of Survival Analysis Medical Researchers
+
+Instructor of Survival plots and Models using SPSS at Liver and Gastrointestinal Diseases Research Center (Tabriz University of Medical Sciences)
+
+Tabriz, Iran
+
+2020
+
+
+### Statistical Methods using SPSS and G-Power (Virtual School of Statistics) for Interested Medical Researchers (5 day Workshop)
+
+Data entry, plots, Statistical tests and advanced methods using **SPSS**,
+Different types of sampling methods, Sample size calculation using **G-Power**,
+Statistical guidelines for authoring articles
+
+Tabriz, Iran
+
+2020 - 2022
+
+
+
+### Introduction to R Language for Beginners.
+
+Instructor of **R programming language** with a focus on data importing and visualization approach using **ggplot2** package) course at RDCC
+
+Tabriz, Iran
+
+2021
+
+
+
+### Introduction to SPSS for Medical Students.
+
+Teaching plots, statistical tests and regression models using **SPSS** For Master Degree Students at workshops
+
+Tabriz, Iran
+
+2021 
+
+
+### fMRI Physics and Clinical Applications
+
+An Introduction to **fMRI** in terms of statistics to These Data for Interested Researchers
+
+Tabriz, Iran
+
+2021
+
+### Research method: sample size
+
+Common formulas for sample size and its calculation using **G-Power**
+
+Tabriz, Iran
+
+2022
+
+### Scientometric Analysis and its application in artificial intelligence field
+
+A road map for researchers interested in **artificial intelligence** and determination of hot topics
+
+Tabriz, Iran
+
+2022
+
+
+
+## Classes
+
+
+### Time Series Model in Epidemiology for PhD Students in Epidemiology
+
+An introduction to Time Series, fitting models using **R**, Preparation of Reports(Including **R** outputs and notes) using **rmarkdown**.
+
+Tabriz, Iran
+
+2021 - 2022
+
+
+### Advanced Statistical Methods for PhD Students in Immunology
+
+Data entry, plots, Statistical tests and advanced methods using **SPSS**,
+Different types of sampling methods, Sample size calculation using **G-Power**.
+
+Tabriz, Iran
+
+2022
+
+Some of My Publications {data-icon=file}
+--------------------------------------------------------------------------------
+
+### Survival analysis of thalassemia major patients using Cox, Gompertz proportional hazard and Weibull accelerated failure time models
+
+
+Published in Medical Journal of the Islamic Republic of Iran (MJIRI)
+
+Tehran, Iran
+
+2017
+
+### Analysis of Infant Congenital Malformation Data using the Bayesian Count Regression
+
+Published in Iranian Red Crescent Medical Journal
+
+Tehran, Iran
+
+2020
+
+**Reza Ali Akbari Khoei** , Anoshirvan Kazemnejad2, Farzad Eskandari and Mohammad Heidarzadeh.
+
+### Contribution Factors on Congenital Malformations in Neonates in Iran
+
+Published in Iranian Journal of Pediatrics
+
+Tehran, Iran
+
+2021
+
+Sevda Riyahifar, **Reza Ali Akbari Khoei** and Kayvan Mirnia. 
+
+### Bisphosphonates and Prevention of the Perimenopausal Breast Cancer Recurrence: A Systematic Review and Meta-Analysis
+
+Published in Journal of Breast Cancer
+
+Seoul, Korea
+
+2022
+
+Zohreh Sanaat; Ozra Nouri; Monireh Khanzadeh; Hadi Mostafaei; Nafiseh Vahed; Neda Kabiri; **Reza Ali Akbari Khoei**; Hanieh Salehi-Pourmehr

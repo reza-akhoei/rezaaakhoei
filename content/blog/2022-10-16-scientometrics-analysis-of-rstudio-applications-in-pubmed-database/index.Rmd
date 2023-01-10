@@ -8,12 +8,14 @@ editor_options:
   markdown: 
     wrap: 72
 slug: []
-categories: []
+categories:
+  - PubMed DataBase
+  - RStudio Application
 tags:
   - Bibliometrix
   - scientometrix
   - Rstudio
-  - PubMed Data base
+  - PubMed DataBase
 link-citations: true
 nocite:
 - '@item1'
@@ -22,9 +24,8 @@ suppress-bibliography: false
 lang: en-US
 zotero: true
 output: 
-   blogdown::html_page:
-     toc: true
-     number_sections: true
+  blogdown::html_page
+toc: true
 bibliography: references.bib
 image:
   focal_point: "Center"
@@ -262,7 +263,7 @@ Based on this map, there are some themes which have been over discussed (topics 
 
 Here, we can see association among Authors, DEs and Journals.
 
-```{r 19, fig.height=12, fig.width=12}
+```{r 19, fig.height=10, fig.width=10}
 threeFieldsPlot(M)
 ```
 
@@ -274,7 +275,7 @@ Here, We can See Evolution of Topics in **RStudio applications** field based on 
 
 This plot shows themes which have been evolutted during the years.
 
-```{r 20, fig.height=12, fig.width=12}
+```{r 20, fig.height=10, fig.width=10}
 years=c(2019)
 
 nexus <- thematicEvolution(M,field="DE",years=years,n=100,

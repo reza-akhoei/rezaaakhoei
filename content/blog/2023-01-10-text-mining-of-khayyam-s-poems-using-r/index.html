@@ -1,0 +1,330 @@
+---
+title: Text Mining of Rubaiyat of Omar Khayyam using R
+author: Reza Khoei
+date: '2023-01-10'
+format: hugo
+draft: false
+editor_options: 
+  markdown: 
+    wrap: 72
+slug: []
+categories:
+  - Text Mining
+  - Tidytext
+tags:
+  - Tidytext
+  - text mining
+  - Rstudio
+  - Khayyam
+  - poem
+  - Rubaiyat
+lang: en-US
+output: 
+  blogdown::html_page
+toc: true
+image:
+  focal_point: "Center"
+---
+
+
+<div id="TOC">
+
+</div>
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<div style="text-align: justify">
+
+<p>
+<a href="https://en.wikipedia.org/wiki/Omar_Khayyam">Khayyam</a> was an Iranian astronomer, mathematician,philosopher and a poet , which is commonly known for his quatrains (short poems). He was almost unknown to whole world, till 19th century, but thanks to <a href="https://en.wikipedia.org/wiki/Edward_FitzGerald_(poet)"><strong>EdwardFitzGerald</strong></a>, his poems were translated to English and published entitled <a href="https://en.wikipedia.org/wiki/Rubaiyat_of_Omar_Khayyam"><em>Rubaiyat of Omar Khayyam</em></a>.
+<p/>
+<p>
+Although, his achievements in astronomy and mathematics such as <a href="https://en.wikipedia.org/wiki/Solar_calendar">solar calender</a> and <a href="https://en.wikipedia.org/wiki/Cubic_equation">cubic equation</a> are admirable, nonetheless, world realized who he really is, because of the hidden amazing philosophy in his poems. Discovery the hidden truth in his poems made me motivated to do some analysis and document it for the others; that is exactly where the <strong>text mining</strong> methods come in. In text mining, the focus is on textual data and extraction of wisdom from it. To have some knowledge about text mining using <em>R</em>, you can refer to <a href="https://www.tidytextmining.com/">Text Mining with R book</a> which is written by <a href="https://juliasilge.com/">Julia Silge</a> and <a href="http://varianceexplained.org/about/">David Robinson</a>.
+<p/>
+<p>
+Now that we have our tools, let’s get ready and start our journey and float in the Khayyam’s mind and find out what was going on in his mind and enjoy it.
+<p/>
+<p><strong>Important</strong>: Khayyam wrote these poems in Persian, but we will examine the English translated version of his poems.</p>
+</div>
+<div id="call-required-packages" class="section level1">
+<h1>Call required packages</h1>
+<p>At first, the packages we need, should be installed and called.</p>
+<pre class="r"><code>install.packages(tidyverse)
+install.packages(tidytext)
+install.packages(gutenbergr)
+install.packages(topicmodels)
+install.packages(tidyr)</code></pre>
+<pre class="r"><code>library(tidyverse)
+library(tidytext)
+library(gutenbergr)
+library(topicmodels)</code></pre>
+</div>
+<div id="download-the-data" class="section level1">
+<h1>Download the data</h1>
+<p>So many books are accessible in the <strong><em>gutenbergr</em></strong> package. Every book has its own <strong><em>gutenberg_id</em></strong> and can be found via it. For more details you can refer to Help page of package. The <strong><em>gutenberg_id</em></strong> for Khayyam is <strong><em>246</em></strong>. Let’s take a look at it.</p>
+<pre class="r"><code>khayyam &lt;- gutenberg_download(246)</code></pre>
+<pre><code>## Determining mirror for Project Gutenberg from https://www.gutenberg.org/robot/harvest</code></pre>
+<pre><code>## Using mirror http://aleph.gutenberg.org</code></pre>
+</div>
+<div id="preprocessing-of-data" class="section level1">
+<h1>Preprocessing of data</h1>
+<p>
+We want just the poems in the book. So sections such as introduction, preface, appendix and references must be deleted from the text. The whole text of the book is accessible with <strong>view(khayyam)</strong> in <em>RStudio</em>.
+<p/>
+<div id="exclusion-of-non-related-data" class="section level2">
+<h2>Exclusion of non-related data</h2>
+<p>
+Before anything, it is better to do some data cleaning.
+As seen below, we remove and exclude rows 1:450 and 1878:2131 from our data.
+<p/>
+<pre class="r"><code>khayyam &lt;- khayyam %&gt;% slice(-c(1:450, 1878:2131))</code></pre>
+</div>
+<div id="stop-words" class="section level2">
+<h2>Stop words</h2>
+<p>
+In English (and obviously any other language), there are some words which are frequently used in every specific texts, but text analysis of them are not so useful. We called them <strong>Stop Words</strong>. <strong><em>R</em></strong> can detect and consider these words.
+<p/>
+<pre class="r"><code>tidy_khayyam &lt;- khayyam %&gt;%
+    unnest_tokens(word, text) %&gt;%
+    anti_join(stop_words)</code></pre>
+<pre><code>## Joining, by = &quot;word&quot;</code></pre>
+<p>
+Below, we can look at most common words in Khayyam’s poems. But, we should notice that this is without considering stop words.
+<p/>
+<pre class="r"><code>tidy_khayyam</code></pre>
+<pre><code>## # A tibble: 2,381 × 2
+##    gutenberg_id word   
+##           &lt;int&gt; &lt;chr&gt;  
+##  1          246 awake  
+##  2          246 morning
+##  3          246 bowl   
+##  4          246 night  
+##  5          246 flung  
+##  6          246 stone  
+##  7          246 stars  
+##  8          246 flight 
+##  9          246 lo     
+## 10          246 hunter 
+## # … with 2,371 more rows</code></pre>
+<pre class="r"><code># The most common words in Khayyam&#39;s poems
+tidy_khayyam %&gt;%
+    count(word, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 1,097 × 2
+##    word      n
+##    &lt;chr&gt; &lt;int&gt;
+##  1 wine     21
+##  2 ah       19
+##  3 cup      19
+##  4 rose     19
+##  5 earth    15
+##  6 dust     14
+##  7 life     14
+##  8 lip      14
+##  9 thou     14
+## 10 day      12
+## # … with 1,087 more rows</code></pre>
+<p>
+Additionally, we can add some words and bind them to these predefined <em>stop words</em>. For example, we customize stop words by adding words <strong><em>ah</em></strong> and <strong><em>sans</em></strong>.
+<p/>
+<pre class="r"><code>custom_stop_words &lt;- bind_rows(tibble(word = c(&quot;ah&quot;,&quot;sans&quot;),  
+            lexicon = c(&quot;custom&quot;)), stop_words)
+
+custom_stop_words</code></pre>
+<pre><code>## # A tibble: 1,151 × 2
+##    word        lexicon
+##    &lt;chr&gt;       &lt;chr&gt;  
+##  1 ah          custom 
+##  2 sans        custom 
+##  3 a           SMART  
+##  4 a&#39;s         SMART  
+##  5 able        SMART  
+##  6 about       SMART  
+##  7 above       SMART  
+##  8 according   SMART  
+##  9 accordingly SMART  
+## 10 across      SMART  
+## # … with 1,141 more rows</code></pre>
+<p>
+Now, purely, we can take a look at the most frequently used words in Khayyam’s poems.
+<p/>
+<pre class="r"><code>tidy_khayyam &lt;- khayyam %&gt;%
+    unnest_tokens(word, text) %&gt;%
+    anti_join(custom_stop_words)</code></pre>
+<pre><code>## Joining, by = &quot;word&quot;</code></pre>
+<pre class="r"><code># The most common words in Khayyam&#39;s poems
+tidy_khayyam %&gt;%
+    count(word, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 1,095 × 2
+##    word      n
+##    &lt;chr&gt; &lt;int&gt;
+##  1 wine     21
+##  2 cup      19
+##  3 rose     19
+##  4 earth    15
+##  5 dust     14
+##  6 life     14
+##  7 lip      14
+##  8 thou     14
+##  9 day      12
+## 10 door     12
+## # … with 1,085 more rows</code></pre>
+<p>
+<strong>Wine</strong>, <strong>cup</strong>, <strong>rose</strong> are 3 most common words. In the following as well, there are words such as <strong>earth</strong>, <strong>dust</strong>, <strong>life</strong>, <strong>lip</strong> and etc. Well, what are these about? What do the wine and the cup refer to? What about the rose and the lip? and others.
+<p/>
+<p>
+Maybe, it is obvious. The <em>wine</em> and the <em>cup</em> are referring to binge and having fun. On the other hand, rose is the symbol of lover in Persian poems and of course it has its own complivated means. Then, lip and rose could refer to <em>pleasure</em> and <em>carelessness</em> and of course <em>love</em>. It’s all about seizing the present moment.
+<p/>
+<p>Below, words repeated more than 10 times, have been shown.</p>
+<pre class="r"><code>library(ggplot2)
+tidy_khayyam %&gt;%
+    count(word, sort = TRUE) %&gt;%
+    filter(n &gt; 10) %&gt;%
+    mutate(word = reorder(word, n)) %&gt;%
+    ggplot(aes(word, n)) +
+    geom_col() +
+    xlab(NULL) +
+    coord_flip()</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>There are some guidelines which can separate the words based on their sentiments. For example positive words or negative words. One of these guidelines is <strong><em>bing</em></strong>.</p>
+<pre class="r"><code>bing_word_counts &lt;- tidy_khayyam %&gt;%
+    inner_join(get_sentiments(&quot;bing&quot;)) %&gt;%
+    count(word, sentiment, sort = TRUE)</code></pre>
+<pre><code>## Joining, by = &quot;word&quot;</code></pre>
+<pre class="r"><code>bing_word_counts</code></pre>
+<pre><code>## # A tibble: 173 × 3
+##    word     sentiment     n
+##    &lt;chr&gt;    &lt;chr&gt;     &lt;int&gt;
+##  1 dust     negative     14
+##  2 darkness negative      6
+##  3 paradise positive      6
+##  4 sweet    positive      6
+##  5 vain     negative      6
+##  6 angel    positive      5
+##  7 hell     negative      5
+##  8 love     positive      5
+##  9 waste    negative      5
+## 10 dead     negative      4
+## # … with 163 more rows</code></pre>
+<p>Here, these words have been visually shown.</p>
+<pre class="r"><code># This can be shown visually
+bing_word_counts %&gt;%
+    group_by(sentiment) %&gt;%
+    top_n(10) %&gt;%
+    mutate(word = reorder(word, n)) %&gt;%
+    ggplot(aes(word, n, fill = sentiment)) +
+    geom_col(show.legend = FALSE) +
+    facet_wrap(~sentiment, scales = &quot;free_y&quot;) +
+    labs(y = &quot;Contribution to sentiment&quot;,
+         x = NULL) +
+    coord_flip()</code></pre>
+<pre><code>## Selecting by n</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>We can check <em>wordcloud</em> plot for Khayyam’s poems. Size of words have been determined based on their frequency.</p>
+<pre class="r"><code>library(wordcloud)</code></pre>
+<pre><code>## Loading required package: RColorBrewer</code></pre>
+<pre class="r"><code>tidy_khayyam %&gt;%
+  anti_join(custom_stop_words) %&gt;%
+  count(word) %&gt;%
+  with(wordcloud(word, n, max.words = 100))</code></pre>
+<pre><code>## Joining, by = &quot;word&quot;</code></pre>
+<pre><code>## Warning in wordcloud(word, n, max.words = 100): dust could not be fit on page.
+## It will not be plotted.</code></pre>
+<pre><code>## Warning in wordcloud(word, n, max.words = 100): round could not be fit on page.
+## It will not be plotted.</code></pre>
+<pre><code>## Warning in wordcloud(word, n, max.words = 100): world could not be fit on page.
+## It will not be plotted.</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+</div>
+<div id="topic-modeling" class="section level1">
+<h1>Topic modeling</h1>
+<p>
+Every document could be separated to different topics that each of them may have their own labels. Topic modeling is a method which can be used for this purpose. A popular topic modeling is <strong>Latent Dirichlet allocation (LDA)</strong>. Based on <em>LDA</em> each document is a mixture of topics and each topic is a mixture of words. In Khayyam’s poems, we hypothesize that it contains two different topics; however we can consider more topics too. But, if you are dealing with a document that include several chapters, you can set number of chapters as number of topics.
+<p/>
+<p>
+First of all, we must get the data ready to fit <strong>LDA</strong> model.
+<p/>
+<pre class="r"><code>q = tidy_khayyam %&gt;%
+     count(gutenberg_id,word, sort = TRUE)
+b = q %&gt;%
+     cast_dtm(gutenberg_id, word, n)</code></pre>
+<p>Now, it’s time to fit <em>LDA</em> with k = 2 (two topics).</p>
+<pre class="r"><code>ap_lda &lt;- LDA(b, k = 2, control = list(seed = 1234))
+ap_lda</code></pre>
+<pre><code>## A LDA_VEM topic model with 2 topics.</code></pre>
+<p>After fitting the model, we can estimate the <strong>per-topic-per-word probabilities, called β (“beta”)</strong>, from the model. Needless to say, that these values indicate the probabilities of that term being generated from that topic.</p>
+<pre class="r"><code>ap_topics &lt;- tidy(ap_lda, matrix = &quot;beta&quot;)
+ap_topics</code></pre>
+<pre><code>## # A tibble: 2,190 × 3
+##    topic term     beta
+##    &lt;int&gt; &lt;chr&gt;   &lt;dbl&gt;
+##  1     1 wine  0.00694
+##  2     2 wine  0.0110 
+##  3     1 cup   0.00978
+##  4     2 cup   0.00629
+##  5     1 rose  0.0108 
+##  6     2 rose  0.00522
+##  7     1 earth 0.00669
+##  8     2 earth 0.00604
+##  9     1 dust  0.00342
+## 10     2 dust  0.00858
+## # … with 2,180 more rows</code></pre>
+<p>
+The term “wine” has a 0.007 probability of being generated from topic 1, but a 0.01
+probability of being generated from topic 2.
+<p/>
+<p>
+Then we take a look at the 10 terms that are most common within each topic.
+<p/>
+<pre class="r"><code>ap_top_terms &lt;- ap_topics %&gt;%
+     group_by(topic) %&gt;%
+     slice_max(beta, n = 10) %&gt;% 
+     ungroup() %&gt;%
+     arrange(topic, -beta)
+
+ap_top_terms %&gt;%
+     mutate(term = reorder_within(term, beta, topic)) %&gt;%
+     ggplot(aes(beta, term, fill = factor(topic))) +
+     geom_col(show.legend = FALSE) +
+     facet_wrap(~ topic, scales = &quot;free&quot;) +
+     scale_y_reordered()</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>What does topic 1 say? the terms <strong>“rose”</strong>, <strong>“lip”</strong>, <strong>“wine”</strong>, <strong>“thee”</strong>. It seems that <em>Khayyam</em> is talking about relationship with lover, kiss and drinking a wine with a partner.
+What about topic 2? There are terms such as <strong>“wine”</strong>, <strong>“hand”</strong>, <strong>“drink”</strong> and <strong>“grape”</strong>. If you have read Khayyam’s poems, you know that he mostly wrote and composed about holding a cup, drinking the wine and enjoying the life. On the other hand, it was a boom age of pottery in ancient times (almost 1000 years ago) in Iran. Khayyam believed that the bodies of died and buried people turn into soil and dust over time and roses grow from that dust.
+He believed that the pottery we use are made from the soil and dust of dead people and one day, the pottery will be made from our soil and dust for next generations(e.g. hundred year later). Therefore, We should treat pottery with respect because it is made from other people’s soil. Time is very very short and we should appreciate and enjoy the short moments of life.</p>
+<pre class="r"><code>beta_wide &lt;- ap_topics %&gt;%
+     mutate(topic = paste0(&quot;topic&quot;, topic)) %&gt;%
+     pivot_wider(names_from = topic, values_from = beta) %&gt;% 
+     filter(topic1 &gt; .001 | topic2 &gt; .001) %&gt;%
+     mutate(log_ratio = log2(topic2 / topic1))
+beta_wide</code></pre>
+<pre><code>## # A tibble: 544 × 4
+##    term   topic1  topic2 log_ratio
+##    &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
+##  1 wine  0.00694 0.0110      0.663
+##  2 cup   0.00978 0.00629    -0.636
+##  3 rose  0.0108  0.00522    -1.05 
+##  4 earth 0.00669 0.00604    -0.146
+##  5 dust  0.00342 0.00858     1.33 
+##  6 life  0.00408 0.00790     0.955
+##  7 lip   0.00841 0.00338    -1.32 
+##  8 thou  0.00531 0.00661     0.317
+##  9 day   0.00789 0.00218    -1.86 
+## 10 door  0.00581 0.00435    -0.417
+## # … with 534 more rows</code></pre>
+<p>
+In this output, we see that the term “wine” is more likely to belong to topic 2. On the other hand, terms “cup” and “rose” are more likely to belong to topic 1. Based on the results, we can labels to each of topics, but we don’t do that and leave it to the taste of the readers.
+<p/>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>
+<p>We introduced the basics concepts of text mining. Clearly, we didn’t delve into details. In a nutshell, we analyzed the Khayyam’s poems. We saw that Khayyam believes in joy. I’ll highly recommend you to read his poems and personally discover his mindset. If we want to summarize his thought and world view in one sentence, that sentence will be this:</p>
+<blockquote>
+<p>Life is short. Always choose happiness.</p>
+</blockquote>
+<p/>
+<div/>
+
+
+</div>

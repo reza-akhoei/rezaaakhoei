@@ -1,7 +1,7 @@
 baseURL: https://rezaaakhoei.rbind.io/
 theme: hugo-apero
 languageCode: en
-title: My personal website
+title: Reza Khoei
 author: Reza Khoei
 copyright: ''
 googleAnalytics: ''
@@ -69,10 +69,16 @@ params:
     repo_name: apreshill/apero
     theme: boxy-light
     use_utterances: yes
+  navigation:
+    help: Help
 taxonomies:
   category: categories
   series: series
   tag: tags
+
+
+
+
 menu:
   footer:
     - name: License
@@ -83,10 +89,6 @@ menu:
       title: Contact form
       url: /contact/
       weight: 2
-    - name: Contributors
-      title: Contributors
-      url: /contributors/
-      weight: 3
   header:
     - name: About
       url: /about/

@@ -1,0 +1,2084 @@
+---
+title: Scientometrics Analysis of RStudio applications in PubMed Database
+author: Reza AA Khoei
+date: '2022-10-16'
+slug: []
+categories: []
+tags:
+  - Bibliometrix
+  - scientometrix
+  - Rstudio
+  - PubMed Data base
+link-citations: true
+nocite:
+- '@item1'
+- '@item2'
+suppress-bibliography: false
+lang: en-US
+zotero: true
+output: 
+   html_document:
+     toc: true
+     number_sections: true
+bibliography: references.bib
+---
+
+<script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
+<link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
+<script src="{{< blogdown/postref >}}index_files/htmlwidgets/htmlwidgets.js"></script>
+<script src="{{< blogdown/postref >}}index_files/plotly-binding/plotly.js"></script>
+<script src="{{< blogdown/postref >}}index_files/typedarray/typedarray.min.js"></script>
+<script src="{{< blogdown/postref >}}index_files/jquery/jquery.min.js"></script>
+<link href="{{< blogdown/postref >}}index_files/crosstalk/css/crosstalk.min.css" rel="stylesheet" />
+<script src="{{< blogdown/postref >}}index_files/crosstalk/js/crosstalk.min.js"></script>
+<link href="{{< blogdown/postref >}}index_files/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="{{< blogdown/postref >}}index_files/plotly-main/plotly-latest.min.js"></script>
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Evaluation and interpretation of scientific productions can be so helpful in determination of prominent authors, active departments and hot topics in a specific field. This process is called <strong>scientometrics</strong> and <strong>bibliometrix</strong>. Scientometrics refers to “all quantitative aspects science and scientific research” <span class="citation">(<a href="#ref-sengupta1992" role="doc-biblioref">Sengupta 1992</a>)</span>. On the other hand, Bibliometrics refers to “the application of mathematics and statistical methods to books and other forms of written communication” <span class="citation">(<a href="#ref-pritchard1969" role="doc-biblioref">Pritchard 1969</a>)</span>. Visualization and Statistical methods of these published documents can be analyzed using <strong>R bibliometrix package</strong>. This package is created and developed by [Massimo Aria] (<a href="https://masimoaria.com" class="uri">https://masimoaria.com</a>) and [Corrado Coccurullo] (<a href="https://www.corradococcurullo.com" class="uri">https://www.corradococcurullo.com</a>).</p>
+<p>Our purpose is to investigate the <em>RStudio</em> applications of published scientific papers of <em>PubMed database</em>. In order to, we used <em>bibliometrix package</em> in <em>Rstudio</em>.</p>
+</div>
+<div id="call-required-packages" class="section level1">
+<h1>Call required packages</h1>
+<p>First of all we should install and call all of required packages for our analysis.</p>
+<pre class="r"><code>install.packages(&quot;bibliometrix&quot;)
+install.packages(&quot;kableExtra&quot;)
+install.packages(&quot;dplyr&quot;)
+install.packages(&quot;ggplot2&quot;)
+install.packages(&quot;reshape2&quot;)
+install.packages(&quot;pubmedR&quot;)</code></pre>
+<pre class="r"><code>options(scipen = 999)
+library(bibliometrix)
+library(kableExtra)
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+library(pubmedR)</code></pre>
+</div>
+<div id="search-strategy" class="section level1">
+<h1>Search strategy</h1>
+<p>The search strategy should be considered based on a predefined <em>search text</em></p>
+<p>An API key is required to better and faster searches.Nevertheless, NULL can be put instead of a specific value.</p>
+<p>As, RStudio and R programming language are interchangeably used, then both of them are considered in search strategy. After determining the search strategy we searched and finally found 649 documents based on searched terms including articles, book chapters, conference papers and etc.</p>
+<p>Now, this data set is necessary to be converted to data frame for statistical analyses. In order to, the following commands are used.</p>
+<pre class="r"><code>D &lt;- pmApiRequest(query = query, res$total_count, api_key = NULL)</code></pre>
+<pre><code>## Documents  200  of  649 
+## Documents  400  of  649 
+## Documents  600  of  649 
+## Documents  649  of  649</code></pre>
+<pre class="r"><code>M &lt;- pmApi2df(D)</code></pre>
+<pre><code>## ================================================================================</code></pre>
+<pre class="r"><code>M &lt;- convert2df(D, dbsource = &quot;pubmed&quot;, format = &quot;api&quot;)</code></pre>
+<pre><code>## 
+## Converting your pubmed collection into a bibliographic dataframe
+## 
+## ================================================================================
+## Done!</code></pre>
+<p>Now we use the following commands to get an overview of the data. This information can be gattered in a table suitable for html files. Some attributes like cell positions, cell alignment and so on can be set with different arguments of <em>kable function</em>.</p>
+<pre class="r"><code>results &lt;- biblioAnalysis(M)</code></pre>
+<p>Sometimes, researchers may prefer TO do their analysis in a specific type of document, as only articles. On the other hand, since Rstudio company have been found in 2011, searches are limited to after 2011.</p>
+<pre class="r"><code>M &lt;- filter(M, M$DT == &quot;JOURNAL ARTICLE&quot; &amp; M$PY &gt;= 2011)
+results &lt;- biblioAnalysis(M)</code></pre>
+<pre class="r"><code>a &lt;- summary(results)</code></pre>
+<pre class="r"><code>knitr::kable(a$MainInformationDF, caption = &quot;Main information of articles&quot;,align = &quot;llccl&quot;, format = &quot;html&quot;) %&gt;% 
+    kable_classic(full_width = F, position = &quot;center&quot;)</code></pre>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:5">Table 1: </span>Main information of articles
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
+Results
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+MAIN INFORMATION ABOUT DATA
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Timespan
+</td>
+<td style="text-align:left;">
+2011:2022
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sources (Journals, Books, etc)
+</td>
+<td style="text-align:left;">
+410
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Documents
+</td>
+<td style="text-align:left;">
+606
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Annual Growth Rate %
+</td>
+<td style="text-align:left;">
+36.77
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Document Average Age
+</td>
+<td style="text-align:left;">
+2.53
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Average citations per doc
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Average citations per year per doc
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+References
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DOCUMENT TYPES
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+journal article
+</td>
+<td style="text-align:left;">
+606
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DOCUMENT CONTENTS
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Keywords Plus (ID)
+</td>
+<td style="text-align:left;">
+1420
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Author’s Keywords (DE)
+</td>
+<td style="text-align:left;">
+1933
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AUTHORS
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Authors
+</td>
+<td style="text-align:left;">
+3156
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Author Appearances
+</td>
+<td style="text-align:left;">
+3596
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Authors of single-authored docs
+</td>
+<td style="text-align:left;">
+22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AUTHORS COLLABORATION
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Single-authored docs
+</td>
+<td style="text-align:left;">
+23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Documents per Author
+</td>
+<td style="text-align:left;">
+0.192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Co-Authors per Doc
+</td>
+<td style="text-align:left;">
+5.93
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+International co-authorships %
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="general-information-about-scientific-documents" class="section level1">
+<h1>General information about scientific documents</h1>
+<p>Here, we can look at some tables and plots which are distracted from data set based on our <strong>search strategy</strong>.</p>
+<div id="scientific-documents-production-year-by-year" class="section level2">
+<h2>Scientific documents production year by year</h2>
+<pre class="r"><code>knitr::kable(a$AnnualProduction, caption = 
+           &quot;Annualy Production for scientific Documents&quot;,
+           align = &quot;cc&quot;, format = &quot;html&quot;) %&gt;%
+           kable_classic(full_width = F, position = &quot;center&quot;)</code></pre>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:7">Table 2: </span>Annualy Production for scientific Documents
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Year
+</th>
+<th style="text-align:center;">
+Articles
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+2011
+</td>
+<td style="text-align:center;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2012
+</td>
+<td style="text-align:center;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2013
+</td>
+<td style="text-align:center;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2014
+</td>
+<td style="text-align:center;">
+21
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2015
+</td>
+<td style="text-align:center;">
+19
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2016
+</td>
+<td style="text-align:center;">
+24
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2017
+</td>
+<td style="text-align:center;">
+35
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+34
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2019
+</td>
+<td style="text-align:center;">
+72
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2020
+</td>
+<td style="text-align:center;">
+139
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2021
+</td>
+<td style="text-align:center;">
+155
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2022
+</td>
+<td style="text-align:center;">
+94
+</td>
+</tr>
+</tbody>
+</table>
+<p>Based on this table, it seems that number of published documents has increased in recent years. Maybe because of Covid-19 pandemi.</p>
+</div>
+<div id="top-10-authors-of-pubmed-papers-analyzed-by-rstudio" class="section level2">
+<h2>Top 10 Authors of <strong>PubMed papers</strong> analyzed by <em>Rstudio</em></h2>
+<p>Lets take a look at top 10 authors and some indexes like <strong>number of articles</strong> and <strong>articles fractionalized</strong>.</p>
+<pre class="r"><code>knitr::kable(a$MostProdAuthors, caption = &quot;Top 10 Authors&quot;, align = &quot;lclc&quot;, format = &quot;html&quot;) %&gt;% kable_classic(full_width = F, position = &quot;center&quot;)</code></pre>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:8">Table 3: </span>Top 10 Authors
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Authors
+</th>
+<th style="text-align:center;">
+Articles
+</th>
+<th style="text-align:left;">
+Authors
+</th>
+<th style="text-align:center;">
+Articles Fractionalized
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+WANG Z
+</td>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:left;">
+OH KK
+</td>
+<td style="text-align:center;">
+3.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LIU Y
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:left;">
+ADNAN M
+</td>
+<td style="text-align:center;">
+2.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Y
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:left;">
+CHO DH
+</td>
+<td style="text-align:center;">
+2.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OH KK
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:left;">
+HU K
+</td>
+<td style="text-align:center;">
+2.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ZHANG Y
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:left;">
+TENAN MS
+</td>
+<td style="text-align:center;">
+1.50
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ADNAN M
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:left;">
+WANG Y
+</td>
+<td style="text-align:center;">
+1.47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHO DH
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:left;">
+LIU Y
+</td>
+<td style="text-align:center;">
+1.35
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG C
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:left;">
+YANG J
+</td>
+<td style="text-align:center;">
+1.17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG H
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:left;">
+WANG Z
+</td>
+<td style="text-align:center;">
+1.16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+XU Y
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:left;">
+LI H
+</td>
+<td style="text-align:center;">
+1.10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="top-10-most-cited-papers-of-pubmed-papers-analyzed-by-rstudio" class="section level2">
+<h2>Top 10 most cited papers of <strong>PubMed papers</strong> analyzed by <em>Rstudio</em></h2>
+<pre class="r"><code>knitr::kable(a$MostCitedPapers[,1:2], caption = &quot;10 Most Cited Papers&quot;,  
+             align = &quot;ll&quot;,format = &quot;html&quot;) %&gt;%  
+    kable_classic(full_width = F, position = &quot;center&quot;)</code></pre>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:9">Table 4: </span>10 Most Cited Papers
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Paper
+</th>
+<th style="text-align:left;">
+DOI
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+LIU Y, 2022, FRONT CELL DEV BIOL
+</td>
+<td style="text-align:left;">
+10.3389/fcell.2022.946363
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CAI Z, 2022, ENVIRON HEALTH PREV MED
+</td>
+<td style="text-align:left;">
+10.1265/ehpm.22-00023
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ALKHAYYAT S, 2022, MEDICINE (BALTIMORE)
+</td>
+<td style="text-align:left;">
+10.1097/MD.0000000000030576
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Z, 2022, J ONCOL
+</td>
+<td style="text-align:left;">
+10.1155/2022/5300523
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DA SILVA TORRES MK, 2022, FRONT CELL INFECT MICROBIOL
+</td>
+<td style="text-align:left;">
+10.3389/fcimb.2022.932563
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PRIMATIKA RA, 2022, VET WORLD
+</td>
+<td style="text-align:left;">
+10.14202/vetworld.2022.1814-1820
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CUI QQ, 2022, MEDICINE (BALTIMORE)
+</td>
+<td style="text-align:left;">
+10.1097/MD.0000000000030728
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PADAR C, 2022, CUREUS
+</td>
+<td style="text-align:left;">
+10.7759/cureus.28414
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HUANG X, 2022, HEMATOLOGY
+</td>
+<td style="text-align:left;">
+10.1080/16078454.2022.2127462
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+YENEW C, 2021, ITAL J FOOD SAF
+</td>
+<td style="text-align:left;">
+10.4081/ijfs.2022.10221
+</td>
+</tr>
+</tbody>
+</table>
+<p>10 most cited papers are seen in the following table.</p>
+</div>
+<div id="top-10-journals-in-of-pubmed-papers-analyzed-by-rstudio" class="section level2">
+<h2>Top 10 journals in of <strong>PubMed papers</strong> analyzed by <em>Rstudio</em></h2>
+<p>Here, we can see top 10 journals based on their frequency of published documents. Apparently, <strong>PLOS ONE</strong> and <strong>BIOINFORMATICS</strong> are prominent in this field.</p>
+<pre class="r"><code>knitr::kable(a$MostRelSources, caption = &quot;Top 10 Journals&quot;, align =       
+        &quot;lc&quot;, format = &quot;html&quot;) %&gt;% kable_classic(full_width = F, position = &quot;center&quot;)</code></pre>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:10">Table 5: </span>Top 10 Journals
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Sources
+</th>
+<th style="text-align:center;">
+Articles
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+PLOS ONE
+</td>
+<td style="text-align:center;">
+21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIOINFORMATICS (OXFORD ENGLAND)
+</td>
+<td style="text-align:center;">
+20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+METHODS IN MOLECULAR BIOLOGY (CLIFTON N.J.)
+</td>
+<td style="text-align:center;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BMC BIOINFORMATICS
+</td>
+<td style="text-align:center;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+F1000RESEARCH
+</td>
+<td style="text-align:center;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIOMED RESEARCH INTERNATIONAL
+</td>
+<td style="text-align:center;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CUREUS
+</td>
+<td style="text-align:center;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+INTERNATIONAL JOURNAL OF ENVIRONMENTAL RESEARCH AND PUBLIC HEALTH
+</td>
+<td style="text-align:center;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MEDICINE
+</td>
+<td style="text-align:center;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DATA IN BRIEF
+</td>
+<td style="text-align:center;">
+6
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="top-10-keywords-de-and-id-of-pubmed-papers-analyzed-by-rstudio" class="section level2">
+<h2>Top 10 keywords: <strong>DE</strong> and <strong>ID</strong> of <strong>PubMed papers</strong> analyzed by <em>Rstudio</em></h2>
+<p>Here, we can see top 10 keywords based on their frequency of published documents. <strong>important</strong> We should notice that there are two types of keywords which we investigate them separately. <strong>DE</strong>s are keywords extracted from article. <strong>ID</strong>s are keywords of references of articles.</p>
+<pre class="r"><code>knitr::kable(a$MostRelKeywords, caption = &quot;Top 10 Keywords&quot;, align = &quot;lclc&quot;, format = &quot;html&quot;) %&gt;%
+     add_footnote(c(&quot;DE: Keywords Extracted from Articles&quot;,&quot;ID: Keywords
+     Extracted from References of Articles&quot;), notation=&quot;alphabet&quot;) %&gt;%  
+     kable_classic(position = &quot;center&quot;)</code></pre>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:11">Table 6: </span>Top 10 Keywords
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Author Keywords (DE)
+</th>
+<th style="text-align:center;">
+Articles
+</th>
+<th style="text-align:left;">
+Keywords-Plus (ID)
+</th>
+<th style="text-align:center;">
+Articles
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+COVID-19
+</td>
+<td style="text-align:center;">
+20
+</td>
+<td style="text-align:left;">
+HUMANS
+</td>
+<td style="text-align:center;">
+320
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+META-ANALYSIS
+</td>
+<td style="text-align:center;">
+19
+</td>
+<td style="text-align:left;">
+FEMALE
+</td>
+<td style="text-align:center;">
+91
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R PROGRAMMING LANGUAGE
+</td>
+<td style="text-align:center;">
+18
+</td>
+<td style="text-align:left;">
+MALE
+</td>
+<td style="text-align:center;">
+85
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R
+</td>
+<td style="text-align:center;">
+17
+</td>
+<td style="text-align:left;">
+SOFTWARE
+</td>
+<td style="text-align:center;">
+82
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RSTUDIO
+</td>
+<td style="text-align:center;">
+16
+</td>
+<td style="text-align:left;">
+ADULT
+</td>
+<td style="text-align:center;">
+54
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PROGNOSIS
+</td>
+<td style="text-align:center;">
+14
+</td>
+<td style="text-align:left;">
+MIDDLE AGED
+</td>
+<td style="text-align:center;">
+47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIOINFORMATICS
+</td>
+<td style="text-align:center;">
+11
+</td>
+<td style="text-align:left;">
+COMPUTATIONAL BIOLOGY
+</td>
+<td style="text-align:center;">
+43
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MACHINE LEARNING
+</td>
+<td style="text-align:center;">
+11
+</td>
+<td style="text-align:left;">
+AGED
+</td>
+<td style="text-align:center;">
+41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CANCER
+</td>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:left;">
+ANIMALS
+</td>
+<td style="text-align:center;">
+37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SARS-COV-2
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:left;">
+RETROSPECTIVE STUDIES
+</td>
+<td style="text-align:center;">
+37
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup>a</sup> DE: Keywords Extracted from Articles
+</td>
+</tr>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup>b</sup> ID: Keywords<br> Extracted from References of Articles
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div id="top-10-authors-and-their-timeline-production" class="section level2">
+<h2>Top 10 authors and their timeline production</h2>
+<pre class="r"><code>res &lt;- authorProdOverTime(M, k=10)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/12-1.png" width="672" /></p>
+<pre class="r"><code>knitr::kable(res$dfAU[1:3], caption = &quot;Top 10 authors and their timeline,as well annually production, total citations, total citations per year&quot;, format = &quot;html&quot;) %&gt;% kable_classic(position = &quot;center&quot;)</code></pre>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:12">Table 7: </span>Top 10 authors and their timeline,as well annually production, total citations, total citations per year
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:right;">
+year
+</th>
+<th style="text-align:right;">
+freq
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+ADNAN M
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ADNAN M
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ADNAN M
+</td>
+<td style="text-align:right;">
+2022
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHO DH
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHO DH
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHO DH
+</td>
+<td style="text-align:right;">
+2022
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LIU Y
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LIU Y
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LIU Y
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LIU Y
+</td>
+<td style="text-align:right;">
+2022
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OH KK
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OH KK
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OH KK
+</td>
+<td style="text-align:right;">
+2022
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG C
+</td>
+<td style="text-align:right;">
+2015
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG C
+</td>
+<td style="text-align:right;">
+2019
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG C
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG C
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG H
+</td>
+<td style="text-align:right;">
+2014
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG H
+</td>
+<td style="text-align:right;">
+2019
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG H
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG H
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG H
+</td>
+<td style="text-align:right;">
+2022
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Y
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Y
+</td>
+<td style="text-align:right;">
+2019
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Y
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Y
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Y
+</td>
+<td style="text-align:right;">
+2022
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Z
+</td>
+<td style="text-align:right;">
+2019
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Z
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Z
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Z
+</td>
+<td style="text-align:right;">
+2022
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+XU Y
+</td>
+<td style="text-align:right;">
+2016
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+XU Y
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+XU Y
+</td>
+<td style="text-align:right;">
+2019
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+XU Y
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+XU Y
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ZHANG Y
+</td>
+<td style="text-align:right;">
+2016
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ZHANG Y
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ZHANG Y
+</td>
+<td style="text-align:right;">
+2022
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="timeline-production-of-best-journal-of-pubmed-papers-analyzed-by-rstudio" class="section level2">
+<h2>Timeline production of best journal of <strong>PubMed papers</strong> analyzed by <em>Rstudio</em></h2>
+<pre class="r"><code>topSO = sourceGrowth(M, top=1, cdf=FALSE)
+DF = melt(topSO, id=&#39;Year&#39;)
+ggplot(DF,aes(Year,value, group=variable, color=variable))+geom_line()</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/13-1.png" width="672" /></p>
+<pre class="r"><code>topSO = sourceGrowth(M, top=3, cdf=FALSE)
+DF = melt(topSO, id=&#39;Year&#39;)</code></pre>
+</div>
+<div id="some-information-about-top-10-authors" class="section level2">
+<h2>Some Information about Top 10 Authors</h2>
+<pre class="r"><code>DF = dominance(results)
+knitr::kable(DF, caption = &quot;Some Information about Top 10 Authors&quot;, digits = 3, align = &quot;lccccccc&quot;, format = &quot;html&quot;) %&gt;%
+    kable_classic(position = &quot;center&quot;)       </code></pre>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:14">Table 8: </span>Some Information about Top 10 Authors
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:center;">
+Dominance Factor
+</th>
+<th style="text-align:center;">
+Tot Articles
+</th>
+<th style="text-align:center;">
+Single-Authored
+</th>
+<th style="text-align:center;">
+Multi-Authored
+</th>
+<th style="text-align:center;">
+First-Authored
+</th>
+<th style="text-align:center;">
+Rank by Articles
+</th>
+<th style="text-align:center;">
+Rank by DF
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+OH KK
+</td>
+<td style="text-align:center;">
+1.000
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG X
+</td>
+<td style="text-align:center;">
+0.333
+</td>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG C
+</td>
+<td style="text-align:center;">
+0.286
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG H
+</td>
+<td style="text-align:center;">
+0.286
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LIU Y
+</td>
+<td style="text-align:center;">
+0.222
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Z
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LI H
+</td>
+<td style="text-align:center;">
+0.167
+</td>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+XU Y
+</td>
+<td style="text-align:center;">
+0.143
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ZHANG X
+</td>
+<td style="text-align:center;">
+0.143
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WANG Y
+</td>
+<td style="text-align:center;">
+0.111
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+10
+</td>
+</tr>
+</tbody>
+</table>
+<p><em>Dominance factor</em> indicates the ratio of first authored papers to total of articles for top 10 authors.</p>
+</div>
+<div id="top-countries-based-on-frequency-of-publications-in-their-journals" class="section level2">
+<h2>Top countries based on frequency of publications in their journals</h2>
+<pre class="r"><code>knitr::kable(head(sort(table(M$SO_CO),decreasing=TRUE),10), caption = &quot;Top Countries based on Frequency of published articles in Journals&quot;, col.names =         c(&quot;Country&quot;, &quot;Frequency&quot;), align = &quot;lc&quot;, format = &quot;html&quot;) %&gt;%
+        kable_classic(full_width = F, position = &quot;center&quot; )</code></pre>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:15">Table 9: </span>Top Countries based on Frequency of published articles in Journals
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Country
+</th>
+<th style="text-align:center;">
+Frequency
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+UNITED STATES
+</td>
+<td style="text-align:center;">
+199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ENGLAND
+</td>
+<td style="text-align:center;">
+168
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SWITZERLAND
+</td>
+<td style="text-align:center;">
+81
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NETHERLANDS
+</td>
+<td style="text-align:center;">
+43
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GERMANY
+</td>
+<td style="text-align:center;">
+14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CANADA
+</td>
+<td style="text-align:center;">
+13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHINA
+</td>
+<td style="text-align:center;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BRAZIL
+</td>
+<td style="text-align:center;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GREECE
+</td>
+<td style="text-align:center;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NEW ZEALAND
+</td>
+<td style="text-align:center;">
+7
+</td>
+</tr>
+</tbody>
+</table>
+<p>As can be seen, United states and England are two prominent countries based on publishing articles.</p>
+</div>
+</div>
+<div id="what-does-say-lotkas-law-us-about-these-data-set" class="section level1">
+<h1>What does say Lotka’s Law us about these data set?</h1>
+<pre class="r"><code>L=lotka(results)
+lotkaTable=cbind(L$AuthorProd[,1],L$AuthorProd[,2],L$AuthorProd[,3],L$fitted)
+knitr::kable(lotkaTable, caption = &quot;Frequency Of Authors Based on Lotka&#39;s Law&quot;, digits = 3, align = &quot;cccc&quot;, format = &quot;html&quot;,col.names = c(&quot;Number of article&quot;, &quot;Number of authors&quot;, &quot;Frequency based on data&quot;, &quot;Frequency based on Lotka&#39;s law&quot;)) %&gt;%
+    kable_classic(full_width = F, position = &quot;center&quot;)</code></pre>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:16">Table 10: </span>Frequency Of Authors Based on Lotka’s Law
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Number of article
+</th>
+<th style="text-align:center;">
+Number of authors
+</th>
+<th style="text-align:center;">
+Frequency based on data
+</th>
+<th style="text-align:center;">
+Frequency based on Lotka’s law
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2893
+</td>
+<td style="text-align:center;">
+0.917
+</td>
+<td style="text-align:center;">
+0.626
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+180
+</td>
+<td style="text-align:center;">
+0.057
+</td>
+<td style="text-align:center;">
+0.064
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+0.015
+</td>
+<td style="text-align:center;">
+0.017
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+12
+</td>
+<td style="text-align:center;">
+0.004
+</td>
+<td style="text-align:center;">
+0.007
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+0.002
+</td>
+<td style="text-align:center;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+0.002
+</td>
+<td style="text-align:center;">
+0.002
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+0.002
+</td>
+<td style="text-align:center;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+0.001
+</td>
+<td style="text-align:center;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+0.001
+</td>
+<td style="text-align:center;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0.000
+</td>
+<td style="text-align:center;">
+0.000
+</td>
+</tr>
+</tbody>
+</table>
+<p>Pvalue of two-sample Kolmogorov-Smirnov test between the frequency based on data and the Lotka’s Law is 0.0148932. In significance level of 0.05, this value says us that our data do not follow Lotka’s law.</p>
+</div>
+<div id="collaboration-networks-for-authors" class="section level1">
+<h1>Collaboration networks for authors</h1>
+<p>Collaboration network of authors are plotted. As well, the network can be plotted for keywords, universities and countries.</p>
+<pre class="r"><code>NetMatrix &lt;- biblioNetwork(M, analysis = &quot;collaboration&quot;, 
+                         network = &quot;authors&quot;, sep = &quot;;&quot;)
+net &lt;- networkPlot(NetMatrix, n = 10, type = &quot;auto&quot;, Title = &quot;collaboration Network&quot;,labelsize=1, halo = TRUE) </code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/17-1.png" width="960" /></p>
+</div>
+<div id="thematic-map" class="section level1">
+<h1>Thematic map</h1>
+<p>Thematic Maps are plotted based on (keywords) <strong>DE</strong> AS follows:</p>
+<pre class="r"><code>remove.terms.1word = c(&quot;aged&quot;,&quot;map&quot;,&quot;allergy&quot;,&quot;demand&quot;,&quot;rest&quot;,&quot;workflow&quot;,&quot;data collection&quot;,&quot;r&quot;,&quot;rstudio&quot;,&quot;data analysis&quot;,&quot;conservation&quot;,&quot;review&quot;,&quot;functional&quot;,
+    &quot;clinical&quot;,&quot;identification&quot;,&quot;data&quot;,&quot;analysis&quot;,&quot;network&quot;,&quot;systematic&quot;,&quot;r programming&quot;,&quot;r package&quot;,&quot;maternal&quot;,&quot;reproducibility&quot;,&quot;r language&quot;,&quot;methods&quot;,&quot;treatment&quot;,&quot;r programming language&quot;,&quot;sars-cov-2&quot;,&quot;retention&quot;,&quot;calcium&quot;,&quot;statistics&quot;,&quot;open source&quot;,&quot;quality&quot;,&quot;methodology&quot;,&quot;complications&quot;,&quot;statistical analysis&quot;,&quot;prognosis&quot;,&quot;algorithms&quot;,&quot;software&quot;)
+
+synonyms1 &lt;- c(&quot;covid-19;coronavirus&quot;,&quot;gene; genes&quot;, &quot;prediction; predicting&quot;, &quot;modeling; modelling; resting&quot;,&quot;emotion; emotional&quot;, &quot;adhd; hyperactivity&quot;,
+      &quot;differentially expressed genes;differentially expressed&quot;)
+tm1 = thematicMap(M, field = &quot;DE&quot;,n.labels = 2, ngrams = 1, remove.terms = remove.terms.1word,synonyms = synonyms1)
+plot(tm1$map)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/18-1.png" width="1152" /></p>
+<p>Thematic map is a plot which has been divided to four quadrant: <em>Niche Themes</em>, <em>Motor Themes</em>, <em>Basic Themes</em> and <em>Emerging or declining Themes</em>. For more details refer to <span class="citation">(<a href="#ref-zhang2022" role="doc-biblioref">Zhang et al. 2022</a>)</span>.</p>
+<p><strong>Motor Themes</strong>: Quadrant I, located in the upper-right quadrant, named motor<br />
+themes, suggested that the themes of the quadrant have developed<br />
+and formed important pillars that shape the field of research.</p>
+<p><strong>Niche Themes</strong>: Quadrant II, located in the upper left quadrant, named niche themes, reflected highly developed but isolated themes.</p>
+<p><strong>Emerging or declining Themes</strong>: Quadrant III, located in the lower-left<br />
+quadrant and named emerging or declining themes, suggested weak development and marginalization of the research field.</p>
+<p><strong>Basic Themes</strong>: Quadrant IV, located in the lower-right quadrant, was named as basic themes. Although these topics are less developed, they are important to the field of study.</p>
+<p>Some diseases (motor themes), like obesity, covid_19, schizophernia, cancer, tuberculosis are discussed well and highly developed and analyzed by <strong>Rstudio</strong>. on the other side, some statistical and analytical topics such as machine learning, pca (principal component analysis), bibliometrics and bioinformatic analysis.</p>
+<p>some diseases (basic themes) like type 2 diabetes mellitus, stroke, differentially expressed genes need to be considered and analyzed more than the present by <strong>rstudio</strong>, as well as meta analysis, systematic review, network analysis and computational analysis are methods which is reccommedned to use.</p>
+<p>Based on this map, there are some themes which have been over discussed (topics covered by niche themes quadrant) in PubMed database. Topics such as, natural language processing, text mining, Pan-Cancer, behavioral science etc. As well, themes in quadrant lll, for example visualization and shiny are of declining themes.</p>
+<p><strong>Explanation</strong>: some words which we don’t want to be included in the map, as well synonym words are predefined.</p>
+</div>
+<div id="associations-among-our-information" class="section level1">
+<h1>Associations among our information</h1>
+<p>Here, we can see association among Authors, DEs and Journals.</p>
+<pre class="r"><code>threeFieldsPlot(M)</code></pre>
+<div id="htmlwidget-1" style="width:1152px;height:1152px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"visdat":{"2e787bdb4fb":["function () ","plotlyVisDat"]},"cur_data":"2e787bdb4fb","attrs":{"2e787bdb4fb":{"arrangement":"snap","node":{"label":["wang z","liu y","wang y","oh kk","zhang y","adnan m","cho dh","wang c","wang h","xu y","zhang x","li h","li m","li x","wang x","zhang q","li y","liu c","pergialiotis v","covid-19","meta-analysis","r programming language","r","rstudio","prognosis","bioinformatics","machine learning","cancer","sars-cov-2","bibliometric","obesity","data analysis","network pharmacology","r package","reproducibility","shiny","methods in molecular biology (clifton, n.j.)","f1000research","cureus","international journal of environmental research and public health","data in brief","frontiers in genetics","peerj","frontiers in pharmacology","behavior research methods"],"x":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.909090909090909,0.909090909090909,0.909090909090909,0.909090909090909,0.909090909090909,0.909090909090909,0.909090909090909,0.909090909090909,0.909090909090909],"y":[0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1],"color":["#9E0142","#A60A43","#AE1345","#B71C47","#BF2649","#C72F4B","#D0384D","#D7414E","#DB484C","#E04F4A","#E55648","#EA5D46","#EE6545","#F36C43","#F57547","#F67F4B","#F99354","#FA9D59","#FCA75D","#FDB063","#FDB869","#FDBF6F","#FDC776","#FDCF7C","#FDD683","#FDDE89","#FBE28C","#F7E58E","#F3E890","#F0EC92","#ECEF94","#DBF09A","#C8E99D","#C0E59F","#B7E1A1","#ADDEA3","#8ED2A4","#79C9A4","#65C1A5","#5DB8A9","#4DA6B0","#459DB4","#3D94B7","#5060AA","#5E4FA2"],"pad":4},"link":{"source":[2,18,0,11,16,16,1,8,12,15,2,7,10,14,1,3,4,5,6,9,13,16,17,16,0,11,16,2,3,5,6,7,10,0,11,16,21,22,23,25,31,22,23,29,31,34,19,24,27,28,30,23,26,30,19,21,24,33,26,33,23,25,27,29,32,21,22,34],"target":[20,20,22,22,22,23,24,24,24,24,25,25,25,25,27,27,27,27,27,27,27,27,27,29,31,31,31,32,32,32,32,32,32,35,35,35,36,36,36,36,36,37,37,37,37,37,38,38,38,38,38,39,39,39,40,41,41,41,42,42,43,43,43,43,43,44,44,44],"value":[1,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,3,3,1,1,1,1,1,3,3,3,2,2,6,3,1,1,2,3,1,1,2,1,1,2,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1]},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"sankey"}},"layout":{"margin":{"b":100,"l":50,"t":100,"r":50,"pad":2},"annotations":[{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"AU","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"DE","x":0.454545454545455,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"SO","x":0.909090909090909,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"SO","x":0.909090909090909,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"SO","x":0.909090909090909,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"SO","x":0.909090909090909,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"SO","x":0.909090909090909,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"SO","x":0.909090909090909,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"SO","x":0.909090909090909,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"SO","x":0.909090909090909,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}},{"text":"SO","x":0.909090909090909,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":14}}],"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"arrangement":"snap","node":{"label":["wang z","liu y","wang y","oh kk","zhang y","adnan m","cho dh","wang c","wang h","xu y","zhang x","li h","li m","li x","wang x","zhang q","li y","liu c","pergialiotis v","covid-19","meta-analysis","r programming language","r","rstudio","prognosis","bioinformatics","machine learning","cancer","sars-cov-2","bibliometric","obesity","data analysis","network pharmacology","r package","reproducibility","shiny","methods in molecular biology (clifton, n.j.)","f1000research","cureus","international journal of environmental research and public health","data in brief","frontiers in genetics","peerj","frontiers in pharmacology","behavior research methods"],"x":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.454545454545455,0.909090909090909,0.909090909090909,0.909090909090909,0.909090909090909,0.909090909090909,0.909090909090909,0.909090909090909,0.909090909090909,0.909090909090909],"y":[0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1],"color":["#9E0142","#A60A43","#AE1345","#B71C47","#BF2649","#C72F4B","#D0384D","#D7414E","#DB484C","#E04F4A","#E55648","#EA5D46","#EE6545","#F36C43","#F57547","#F67F4B","#F99354","#FA9D59","#FCA75D","#FDB063","#FDB869","#FDBF6F","#FDC776","#FDCF7C","#FDD683","#FDDE89","#FBE28C","#F7E58E","#F3E890","#F0EC92","#ECEF94","#DBF09A","#C8E99D","#C0E59F","#B7E1A1","#ADDEA3","#8ED2A4","#79C9A4","#65C1A5","#5DB8A9","#4DA6B0","#459DB4","#3D94B7","#5060AA","#5E4FA2"],"pad":4},"link":{"source":[2,18,0,11,16,16,1,8,12,15,2,7,10,14,1,3,4,5,6,9,13,16,17,16,0,11,16,2,3,5,6,7,10,0,11,16,21,22,23,25,31,22,23,29,31,34,19,24,27,28,30,23,26,30,19,21,24,33,26,33,23,25,27,29,32,21,22,34],"target":[20,20,22,22,22,23,24,24,24,24,25,25,25,25,27,27,27,27,27,27,27,27,27,29,31,31,31,32,32,32,32,32,32,35,35,35,36,36,36,36,36,37,37,37,37,37,38,38,38,38,38,39,39,39,40,41,41,41,42,42,43,43,43,43,43,44,44,44],"value":[1,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,3,3,1,1,1,1,1,3,3,3,2,2,6,3,1,1,2,3,1,1,2,1,1,2,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1]},"type":"sankey","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>This plot shows how keywords, authors and journals are related to each other.</p>
+</div>
+<div id="thematic-evolution-plot" class="section level1">
+<h1>Thematic Evolution Plot</h1>
+<p>Here, We can See Evolution of Topics in <strong>RStudio applications</strong> field based on <strong>DE</strong> and <strong>TI.</strong></p>
+<p>This plot shows themes which have been evolutted during the years.</p>
+<pre class="r"><code>years=c(2019)
+
+nexus &lt;- thematicEvolution(M,field=&quot;DE&quot;,years=years,n=100,
+          minFreq=3, ngrams = 1,remove.terms = remove.terms.1word,
+          synonyms = synonyms1)
+plotThematicEvolution(nexus$Nodes,nexus$Edges)</code></pre>
+<div id="htmlwidget-2" style="width:1152px;height:1152px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"visdat":{"2e7810cc4226":["function () ","plotlyVisDat"]},"cur_data":"2e7810cc4226","attrs":{"2e7810cc4226":{"arrangement":"snap","node":{"label":["cancer","machine learning","mental health","obesity","shiny","bibliometric","colorectal cancer","machine learning","mental health","obesity"],"x":[0,0,0,0,0,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333],"y":[0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1],"color":["#377EB880","#4DAF4A80","#66C2A580","#984EA380","#FF7F0080","#FC8D6280","#F781BF80","#66C2A580","#A6562880","#FFD92F80"],"pad":4},"link":{"source":[0,1,1,2,3,3,4],"target":[5,6,7,8,7,9,5],"value":[50,33.3333333333333,14.2857142857143,100,25,25,100]},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"sankey"}},"layout":{"margin":{"b":100,"l":50,"t":100,"r":50,"pad":4},"annotations":[{"text":"2011-2019","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2011-2019","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2011-2019","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2011-2019","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2011-2019","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2020-2022","x":0.833333333333333,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2020-2022","x":0.833333333333333,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2020-2022","x":0.833333333333333,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2020-2022","x":0.833333333333333,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2020-2022","x":0.833333333333333,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}}],"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"arrangement":"snap","node":{"label":["cancer","machine learning","mental health","obesity","shiny","bibliometric","colorectal cancer","machine learning","mental health","obesity"],"x":[0,0,0,0,0,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333],"y":[0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1],"color":["#377EB880","#4DAF4A80","#66C2A580","#984EA380","#FF7F0080","#FC8D6280","#F781BF80","#66C2A580","#A6562880","#FFD92F80"],"pad":4},"link":{"source":[0,1,1,2,3,3,4],"target":[5,6,7,8,7,9,5],"value":[50,33.3333333333333,14.2857142857143,100,25,25,100]},"type":"sankey","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>nexus &lt;- thematicEvolution(M,field=&quot;TI&quot;,years=years,n=100,
+          minFreq=3, ngrams = 2,remove.terms = remove.terms.1word,
+          synonyms = synonyms1)</code></pre>
+<pre><code>## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 1 rows [779].</code></pre>
+<pre class="r"><code>plotThematicEvolution(nexus$Nodes,nexus$Edges)</code></pre>
+<div id="htmlwidget-3" style="width:1152px;height:1152px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"visdat":{"2e781654100f":["function () ","plotlyVisDat"]},"cur_data":"2e781654100f","attrs":{"2e781654100f":{"arrangement":"snap","node":{"label":["breast cancer","differentially expressed genes","gene expression","machine learning","network analysis","systematic review","network pharmacology","bioinformatics analysis","gene expression","network analysis","systematic review"],"x":[0,0,0,0,0,0,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333],"y":[0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1],"color":["#FF7F0080","#B2DF8A80","#A6562880","#4DAF4A80","#984EA380","#377EB880","#F781BF80","#99999980","#E78AC380","#8DA0CB80","#E41A1C80"],"pad":4},"link":{"source":[0,1,2,3,4,5,5],"target":[6,7,8,6,9,6,10],"value":[100,33.3333333333333,50,33.3333333333333,33.3333333333333,20,25]},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"sankey"}},"layout":{"margin":{"b":100,"l":50,"t":100,"r":50,"pad":4},"annotations":[{"text":"2011-2019","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2011-2019","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2011-2019","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2011-2019","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2011-2019","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2011-2019","x":0,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2020-2022","x":0.833333333333333,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2020-2022","x":0.833333333333333,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2020-2022","x":0.833333333333333,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2020-2022","x":0.833333333333333,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}},{"text":"2020-2022","x":0.833333333333333,"y":1.08,"showarrow":false,"xanchor":"center","font":{"color":"Dark","family":"TimesNewRoman","size":18}}],"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"arrangement":"snap","node":{"label":["breast cancer","differentially expressed genes","gene expression","machine learning","network analysis","systematic review","network pharmacology","bioinformatics analysis","gene expression","network analysis","systematic review"],"x":[0,0,0,0,0,0,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333],"y":[0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1],"color":["#FF7F0080","#B2DF8A80","#A6562880","#4DAF4A80","#984EA380","#377EB880","#F781BF80","#99999980","#E78AC380","#8DA0CB80","#E41A1C80"],"pad":4},"link":{"source":[0,1,2,3,4,5,5],"target":[6,7,8,6,9,6,10],"value":[100,33.3333333333333,50,33.3333333333333,33.3333333333333,20,25]},"type":"sankey","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p><strong>References:</strong></p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-pritchard1969" class="csl-entry">
+Pritchard, A. 1969. <span>“Statistical Bibliography or Bibliometrics.”</span> <em>Undefined</em>. <a href="https://www.semanticscholar.org/me/library/all">https://www.semanticscholar.org/me/library/all</a>.
+</div>
+<div id="ref-sengupta1992" class="csl-entry">
+Sengupta, I. N. 1992. <span>“Bibliometrics, Informetrics, Scientometrics and Librametrics: An Overview”</span> 42 (2): 75–98. <a href="https://doi.org/10.1515/libr.1992.42.2.75">https://doi.org/10.1515/libr.1992.42.2.75</a>.
+</div>
+<div id="ref-zhang2022" class="csl-entry">
+Zhang, Mingjie, Xiaoxue Wang, Xueting Chen, Zixuan Song, Yuting Wang, Yangzi Zhou, and Dandan Zhang. 2022. <span>“A Scientometric Analysis and Visualization Discovery of Enhanced Recovery After Surgery.”</span> <em>Frontiers in Surgery</em> 9. <a href="https://www.frontiersin.org/articles/10.3389/fsurg.2022.894083">https://www.frontiersin.org/articles/10.3389/fsurg.2022.894083</a>.
+</div>
+</div>
+</div>

@@ -8,6 +8,7 @@ description: I am a statistician and data analyst. I am passionate about data an
   like the languages I speak. However, most of statistical topics covers data science
   field and each statistician can be a data scientist; yet I would rather call myself
   a data student. Because it reminds me that I must be always in learning.
+  
 image_left: yes
 images: img/MyImage.png
 show_action_link: yes

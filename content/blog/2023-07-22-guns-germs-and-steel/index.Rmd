@@ -1,0 +1,8 @@
+---
+title: Guns, germs and steel
+author: Reza Khoei
+date: '2023-07-22'
+slug: []
+categories: []
+tags: []
+---

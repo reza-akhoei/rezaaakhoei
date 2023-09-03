@@ -1,6 +1,6 @@
 ---
 author: "Reza Khoei"
-role: Biostatistician, data student
+role: biostatistician, data student
 avatar_shape: rounded
 show_social_links: yes
 

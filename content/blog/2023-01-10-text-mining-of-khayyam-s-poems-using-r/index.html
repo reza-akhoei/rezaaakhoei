@@ -61,29 +61,40 @@ library(topicmodels)</code></pre>
 </div>
 <div id="download-the-data" class="section level1">
 <h1>Download the data</h1>
-<p>So many books are accessible in the <strong><em>gutenbergr</em></strong> package. Every book has its own <strong><em>gutenberg_id</em></strong> and can be found via it. For more details you can refer to Help page of package. The <strong><em>gutenberg_id</em></strong> for Khayyam is <strong><em>246</em></strong>. Let’s take a look at it.</p>
+<div style="text-align: justify">
+So many books are accessible in the <strong><em>gutenbergr</em></strong> package. Every book has its own <strong><em>gutenberg_id</em></strong> and can be found via it. For more details you can refer to Help page of package. The <strong><em>gutenberg_id</em></strong> for Khayyam is <strong><em>246</em></strong>. Let’s take a look at it.
+<div/>
+
+
 <pre class="r"><code>khayyam &lt;- gutenberg_download(246)</code></pre>
 <pre><code>## Determining mirror for Project Gutenberg from https://www.gutenberg.org/robot/harvest</code></pre>
 <pre><code>## Using mirror http://aleph.gutenberg.org</code></pre>
 </div>
 <div id="preprocessing-of-data" class="section level1">
 <h1>Preprocessing of data</h1>
+<div style="text-align: justify">
 <p>
 We want just the poems in the book. So sections such as introduction, preface, appendix and references must be deleted from the text. The whole text of the book is accessible with <strong>view(khayyam)</strong> in <em>RStudio</em>.
 <p/>
+<div/>
+
 <div id="exclusion-of-non-related-data" class="section level2">
 <h2>Exclusion of non-related data</h2>
 <p>
 Before anything, it is better to do some data cleaning.
-As seen below, we remove and exclude rows 1:450 and 1878:2131 from our data.
+As seen below, we remove and exclude rows <strong>1:450</strong> and <strong>1878:2131</strong> from our data.
 <p/>
 <pre class="r"><code>khayyam &lt;- khayyam %&gt;% slice(-c(1:450, 1878:2131))</code></pre>
 </div>
 <div id="stop-words" class="section level2">
 <h2>Stop words</h2>
+<div style="text-align: justify">
 <p>
 In English (and obviously any other language), there are some words which are frequently used in every specific texts, but text analysis of them are not so useful. We called them <strong>Stop Words</strong>. <strong><em>R</em></strong> can detect and consider these words.
 <p/>
+<div/>
+
+
 <pre class="r"><code>tidy_khayyam &lt;- khayyam %&gt;%
     unnest_tokens(word, text) %&gt;%
     anti_join(stop_words)</code></pre>
@@ -168,12 +179,18 @@ tidy_khayyam %&gt;%
 ##  9 day      12
 ## 10 door     12
 ## # … with 1,085 more rows</code></pre>
+<div style="text-align: justify">
 <p>
-<strong>Wine</strong>, <strong>cup</strong>, <strong>rose</strong> are 3 most common words. In the following as well, there are words such as <strong>earth</strong>, <strong>dust</strong>, <strong>life</strong>, <strong>lip</strong> and etc. Well, what are these about? What do the wine and the cup refer to? What about the rose and the lip? and others.
+<strong>Wine</strong>, <strong>cup</strong>, <strong>rose</strong> are 3 most common words. In the following, as well, there are words such as <strong>earth</strong>, <strong>dust</strong>, <strong>life</strong>, <strong>lip</strong> and etc. Well, what are these about? What do the wine and the cup refer to? What about the rose and the lip? and also others.
 <p/>
+<div/>
+
+<div style="text-align: justify">
 <p>
-Maybe, it is obvious. The <em>wine</em> and the <em>cup</em> are referring to binge and having fun. On the other hand, rose is the symbol of lover in Persian poems and of course it has its own complivated means. Then, lip and rose could refer to <em>pleasure</em> and <em>carelessness</em> and of course <em>love</em>. It’s all about seizing the present moment.
+Maybe, it is obvious. The <em>wine</em> and the <em>cup</em> are referring to binge and having fun. On the other hand, rose is the symbol of lover in Persian poems and of course it has its own complicated means. Then, lip and rose could refer to <em>pleasure</em> and <em>carelessness</em> and of course <em>love</em>. It’s all about seizing the present moment.
 <p/>
+<div/>
+
 <p>Below, words repeated more than 10 times, have been shown.</p>
 <pre class="r"><code>library(ggplot2)
 tidy_khayyam %&gt;%
@@ -227,20 +244,21 @@ bing_word_counts %&gt;%
   count(word) %&gt;%
   with(wordcloud(word, n, max.words = 100))</code></pre>
 <pre><code>## Joining, by = &quot;word&quot;</code></pre>
-<pre><code>## Warning in wordcloud(word, n, max.words = 100): dust could not be fit on page.
-## It will not be plotted.</code></pre>
 <pre><code>## Warning in wordcloud(word, n, max.words = 100): round could not be fit on page.
 ## It will not be plotted.</code></pre>
-<pre><code>## Warning in wordcloud(word, n, max.words = 100): world could not be fit on page.
+<pre><code>## Warning in wordcloud(word, n, max.words = 100): earth could not be fit on page.
 ## It will not be plotted.</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 </div>
 <div id="topic-modeling" class="section level1">
 <h1>Topic modeling</h1>
+<div style="text-align: justify">
 <p>
 Every document could be separated to different topics that each of them may have their own labels. Topic modeling is a method which can be used for this purpose. A popular topic modeling is <strong>Latent Dirichlet allocation (LDA)</strong>. Based on <em>LDA</em> each document is a mixture of topics and each topic is a mixture of words. In Khayyam’s poems, we hypothesize that it contains two different topics; however we can consider more topics too. But, if you are dealing with a document that include several chapters, you can set number of chapters as number of topics.
 <p/>
+<div/>
+
 <p>
 First of all, we must get the data ready to fit <strong>LDA</strong> model.
 <p/>
@@ -252,7 +270,7 @@ b = q %&gt;%
 <pre class="r"><code>ap_lda &lt;- LDA(b, k = 2, control = list(seed = 1234))
 ap_lda</code></pre>
 <pre><code>## A LDA_VEM topic model with 2 topics.</code></pre>
-<p>After fitting the model, we can estimate the <strong>per-topic-per-word probabilities, called β (“beta”)</strong>, from the model. Needless to say, that these values indicate the probabilities of that term being generated from that topic.</p>
+<p>After fitting the model, we can estimate the <strong>per-topic-per-word probabilities, called β (“beta”)</strong>, from the model. Needless to say that these values indicate the probabilities of that term being generated from that topic.</p>
 <pre class="r"><code>ap_topics &lt;- tidy(ap_lda, matrix = &quot;beta&quot;)
 ap_topics</code></pre>
 <pre><code>## # A tibble: 2,190 × 3
@@ -289,9 +307,13 @@ ap_top_terms %&gt;%
      facet_wrap(~ topic, scales = &quot;free&quot;) +
      scale_y_reordered()</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
-<p>What does topic 1 say? the terms <strong>“rose”</strong>, <strong>“lip”</strong>, <strong>“wine”</strong>, <strong>“thee”</strong>. It seems that <em>Khayyam</em> is talking about relationship with lover, kiss and drinking a wine with a partner.
+<div style="text-align: justify">
+What does topic 1 say? the terms <strong>“rose”</strong>, <strong>“lip”</strong>, <strong>“wine”</strong>, <strong>“thee”</strong>. It seems that <em>Khayyam</em> is talking about relationship with lover, kiss and drinking a wine with a partner.
 What about topic 2? There are terms such as <strong>“wine”</strong>, <strong>“hand”</strong>, <strong>“drink”</strong> and <strong>“grape”</strong>. If you have read Khayyam’s poems, you know that he mostly wrote and composed about holding a cup, drinking the wine and enjoying the life. On the other hand, it was a boom age of pottery in ancient times (almost 1000 years ago) in Iran. Khayyam believed that the bodies of died and buried people turn into soil and dust over time and roses grow from that dust.
-He believed that the pottery we use are made from the soil and dust of dead people and one day, the pottery will be made from our soil and dust for next generations(e.g. hundred year later). Therefore, We should treat pottery with respect because it is made from other people’s soil. Time is very very short and we should appreciate and enjoy the short moments of life.</p>
+He believed that the pottery we use are made from the soil and dust of dead people and one day, the pottery will be made from our soil and dust for next generations(e.g. hundred year later). Therefore, We should treat pottery with respect because it is made from other people’s soil. Time is very very short and we should appreciate and enjoy the short moments of life.
+<div/>
+
+
 <pre class="r"><code>beta_wide &lt;- ap_topics %&gt;%
      mutate(topic = paste0(&quot;topic&quot;, topic)) %&gt;%
      pivot_wider(names_from = topic, values_from = beta) %&gt;% 
@@ -312,19 +334,22 @@ beta_wide</code></pre>
 ##  9 day   0.00789 0.00218    -1.86 
 ## 10 door  0.00581 0.00435    -0.417
 ## # … with 534 more rows</code></pre>
+<div style="text-align: justify">
 <p>
-In this output, we see that the term “wine” is more likely to belong to topic 2. On the other hand, terms “cup” and “rose” are more likely to belong to topic 1. Based on the results, we can labels to each of topics, but we don’t do that and leave it to the taste of the readers.
+In this output, we see that the term “wine” is more likely to belong to topic 2. On the other hand, terms “cup” and “rose” are more likely to belong to topic 1. Based on the results, we can labels to each of topics, but we don’t do that and leave it to the taste of the dear readers.
 <p/>
+<div/>
+
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
+<div style="text-align: justify">
 <p>
-<p>We introduced the basics concepts of text mining. Clearly, we didn’t delve into details. In a nutshell, we analyzed the Khayyam’s poems. We saw that Khayyam believes in joy. I’ll highly recommend you to read his poems and personally discover his mindset. If we want to summarize his thought and world view in one sentence, that sentence will be this:</p>
+We introduced the basics concepts of text mining. Clearly, we didn’t delve into details. In a nutshell, we analyzed the Khayyam’s poems. We saw that Khayyam believes in joy. I highly recommend you to read his poems and personally discover his mindset. If we want to summarize his thought and world view in one sentence, that sentence will be this:
+<div/>
+
 <blockquote>
 <p>Life is short. Always choose happiness.</p>
 </blockquote>
 <p/>
-<div/>
-
-
 </div>

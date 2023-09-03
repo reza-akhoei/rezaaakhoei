@@ -2,7 +2,7 @@
 cascade:
   headless: true
 description: |
-  A Biostatistician who prefer others call him data student
+  A biostatistician who prefers to be called a data student.
 show_header: true
 sidebar_left: true
 title: About

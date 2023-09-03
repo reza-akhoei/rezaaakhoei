@@ -36,7 +36,7 @@ knitr::opts_chunk$set(echo = TRUE)
 <div style="text-align: justify">
 
 <p>
-[Khayyam](https://en.wikipedia.org/wiki/Omar_Khayyam) was an Iranian astronomer, mathematician,philosopher and a poet , which is commonly known for his quatrains (short poems). He was almost unknown to whole world, till 19th century, but thanks to [**EdwardFitzGerald**](https://en.wikipedia.org/wiki/Edward_FitzGerald_(poet)), his poems were translated to English and published entitled [*Rubaiyat of Omar Khayyam*](https://en.wikipedia.org/wiki/Rubaiyat_of_Omar_Khayyam).
+[Khayyam](https://en.wikipedia.org/wiki/Omar_Khayyam) was an Iranian astronomer, mathematician,philosopher and a poet , which is commonly known for his quatrains (short poems). He was almost unknown to whole world, till 19th century, but thanks to [**EdwardFitzGerald**](https://en.wikipedia.org/wiki/Edward_FitzGerald_(poet)), his poems were translated to english and published entitled [*Rubaiyat of Omar Khayyam*](https://en.wikipedia.org/wiki/Rubaiyat_of_Omar_Khayyam).
 <p/>
 <p>
 Although, his achievements in astronomy and mathematics such as [solar calender](https://en.wikipedia.org/wiki/Solar_calendar) and [cubic equation](https://en.wikipedia.org/wiki/Cubic_equation) are admirable, nonetheless, world realized who he really is, because of the hidden amazing philosophy in his poems. Discovery the hidden truth in his poems made me motivated to do some analysis and document it for the others; that is exactly where the **text mining** methods come in. In text mining, the focus is on textual data and extraction of wisdom from it. To have some knowledge about text mining using *R*, you can refer to [Text Mining with R book](https://www.tidytextmining.com/) which is written by [Julia Silge](https://juliasilge.com/) and [David Robinson](http://varianceexplained.org/about/).
@@ -69,7 +69,9 @@ library(topicmodels)
 
 # Download the data
 
+<div style="text-align: justify">
 So many books are accessible in the ***gutenbergr*** package. Every book has its own ***gutenberg_id*** and can be found via it. For more details you can refer to Help page of package. The ***gutenberg_id*** for Khayyam is ***246***. Let's take a look at it. 
+<div/>
 
 ```{r}
 khayyam <- gutenberg_download(246)
@@ -77,15 +79,17 @@ khayyam <- gutenberg_download(246)
 
 # Preprocessing of data
 
+<div style="text-align: justify">
 <p>
 We want just the poems in the book. So sections such as introduction, preface, appendix and references must be deleted from the text. The whole text of the book is accessible with **view(khayyam)** in *RStudio*.
 <p/>
+<div/>
 
 ## Exclusion of non-related data
 
 <p>
 Before anything, it is better to do some data cleaning. 
-As seen below, we remove and exclude rows 1:450 and 1878:2131 from our data.
+As seen below, we remove and exclude rows **1:450** and **1878:2131** from our data.
 <p/>
 
 ```{r}
@@ -95,10 +99,11 @@ khayyam <- khayyam %>% slice(-c(1:450, 1878:2131))
 
 ## Stop words
 
+<div style="text-align: justify">
 <p>
 In English (and obviously any other language), there are some words which are frequently used in every specific texts, but text analysis of them are not so useful. We called them **Stop Words**. ***R*** can detect and consider these words.
 <p/>
-
+<div/>
    
 ```{r}
 tidy_khayyam <- khayyam %>%
@@ -145,13 +150,17 @@ tidy_khayyam %>%
     count(word, sort = TRUE)
 ```
 
+<div style="text-align: justify">
 <p>
-**Wine**, **cup**, **rose** are 3 most common words. In the following as well, there are words such as **earth**, **dust**, **life**, **lip**  and etc. Well, what are these about? What do the wine and the cup refer to? What about the rose and the lip? and others.
+**Wine**, **cup**, **rose** are 3 most common words. In the following, as well, there are words such as **earth**, **dust**, **life**, **lip**  and etc. Well, what are these about? What do the wine and the cup refer to? What about the rose and the lip? and also others.
 <p/>
+<div/>
 
+<div style="text-align: justify">
 <p>
-Maybe, it is obvious. The *wine* and the *cup* are referring to binge and having fun. On the other hand, rose is the symbol of lover in Persian poems and of course it has its own complivated means. Then, lip and rose could refer to *pleasure* and *carelessness* and of course *love*. It's all about seizing the present moment.
+Maybe, it is obvious. The *wine* and the *cup* are referring to binge and having fun. On the other hand, rose is the symbol of lover in Persian poems and of course it has its own complicated means. Then, lip and rose could refer to *pleasure* and *carelessness* and of course *love*. It's all about seizing the present moment.
 <p/>
+<div/>
 
 Below, words repeated more than 10 times, have been shown.
 
@@ -207,9 +216,12 @@ tidy_khayyam %>%
 ```
 
 # Topic modeling
+
+<div style="text-align: justify">
 <p>
 Every document could be separated to different topics that each of them may have their own labels. Topic modeling is a method which can be used for this purpose. A popular topic modeling is **Latent Dirichlet allocation (LDA)**. Based on *LDA* each document is a mixture of topics and each topic is a mixture of words. In Khayyam's poems, we hypothesize that it contains two different topics; however we can consider more topics too. But, if you are dealing with a document that include several chapters, you can set number of chapters as number of topics. 
 <p/>
+<div/>
 
 <p>
 First of all, we must get the data ready to fit **LDA** model.
@@ -230,7 +242,7 @@ ap_lda <- LDA(b, k = 2, control = list(seed = 1234))
 ap_lda
 ```
 
-After fitting the model, we can estimate the **per-topic-per-word probabilities, called β (“beta”)**, from the model. Needless to say, that these values indicate the probabilities of that term being generated from that topic. 
+After fitting the model, we can estimate the **per-topic-per-word probabilities, called β (“beta”)**, from the model. Needless to say that these values indicate the probabilities of that term being generated from that topic. 
 
 ```{r}
 ap_topics <- tidy(ap_lda, matrix = "beta")
@@ -261,10 +273,11 @@ ap_top_terms %>%
      scale_y_reordered()
 ```
 
+<div style="text-align: justify">
 What does topic 1 say? the terms **"rose"**, **"lip"**, **"wine"**, **"thee"**. It seems that *Khayyam* is talking about relationship with lover, kiss and drinking a wine with a partner. 
 What about topic 2? There are terms such as **"wine"**, **"hand"**, **"drink"** and **"grape"**. If you have read Khayyam's poems, you know that he mostly wrote and composed about holding a cup, drinking the wine and enjoying the life. On the other hand, it was a boom age of pottery in ancient times (almost 1000 years ago) in Iran. Khayyam believed that the bodies of died and buried people turn into soil and dust over time and roses grow from that dust.
 He believed that the pottery we use are made from the soil and dust of dead people and one day, the pottery will be made from our soil and dust for next generations(e.g. hundred year later). Therefore, We should treat pottery with respect because it is made from other people's soil. Time is very very short and we should appreciate and enjoy the short moments of life.
-
+<div/>
 
 ```{r}
 beta_wide <- ap_topics %>%
@@ -275,16 +288,19 @@ beta_wide <- ap_topics %>%
 beta_wide
 ```
 
+<div style="text-align: justify">
 <p>
-In this output, we see that the term "wine" is more likely to belong to topic 2. On the other hand, terms "cup" and "rose" are more likely to belong to topic 1. Based on the results, we can labels to each of topics, but we don't do that and leave it to the taste of the readers.
+In this output, we see that the term "wine" is more likely to belong to topic 2. On the other hand, terms "cup" and "rose" are more likely to belong to topic 1. Based on the results, we can labels to each of topics, but we don't do that and leave it to the taste of the dear readers.
 <p/>
+<div/>
 
 # Conclusion
 
+<div style="text-align: justify">
 <p>
-We introduced the basics concepts of text mining. Clearly, we didn't delve into details. In a nutshell, we analyzed the Khayyam's poems. We saw that Khayyam believes in joy. I'll highly recommend you to read his poems and personally discover his mindset. If we want to summarize his thought and world view in one sentence, that sentence will be this:
+We introduced the basics concepts of text mining. Clearly, we didn't delve into details. In a nutshell, we analyzed the Khayyam's poems. We saw that Khayyam believes in joy. I highly recommend you to read his poems and personally discover his mindset. If we want to summarize his thought and world view in one sentence, that sentence will be this:
+<div/>
 
 > Life is short. Always choose happiness.
 
 <p/>
-<div/>

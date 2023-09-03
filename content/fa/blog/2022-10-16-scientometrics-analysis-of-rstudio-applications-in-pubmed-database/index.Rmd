@@ -1,0 +1,291 @@
+---
+title: Scientometrics Analysis of RStudio applications in PubMed Database
+author: Reza Khoei
+date: '2022-10-16'
+format: hugo
+draft: false
+editor_options: 
+  markdown: 
+    wrap: 72
+slug: []
+categories: []
+tags:
+  - Bibliometrix
+  - scientometrix
+  - Rstudio
+  - PubMed Data base
+link-citations: true
+nocite:
+- '@item1'
+- '@item2'
+suppress-bibliography: false
+lang: en-US
+zotero: true
+output: 
+   blogdown::html_page:
+     toc: true
+     number_sections: true
+bibliography: references.bib
+image:
+  focal_point: "Center"
+---
+
+```{r include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = NA)
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+Evaluation and interpretation of scientific productions can be so helpful in determination of prominent authors, active departments and hot topics in a specific field. This process is called **scientometrics** and **bibliometrix**. Scientometrics refers to "all quantitative aspects science and scientific research" [@sengupta1992]. On the other hand, Bibliometrics refers to "the application of mathematics and statistical methods to books and other forms of written communication" [@pritchard1969]. Visualization and Statistical methods of these published documents can be analyzed using **R bibliometrix package**. This package is created and developed by Massimo Aria(https://masimoaria.com/) and Corrado Coccurullo(https://www.corradococcurullo.com/).
+
+Our purpose is to investigate the *RStudio* applications of published scientific papers of *PubMed database*. In order to, we used *bibliometrix package* in *Rstudio*.
+
+# Call required packages
+
+First of all we should install and call all of required packages for our analysis.
+
+```{r 0, eval=FALSE, message=FALSE, warning=FALSE}
+install.packages("bibliometrix")
+install.packages("kableExtra")
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("reshape2")
+install.packages("pubmedR")
+```
+
+```{r 1, message=FALSE, warning=FALSE}
+options(scipen = 999)
+library(bibliometrix)
+library(kableExtra)
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+library(pubmedR)
+```
+
+# Search strategy
+
+The search strategy should be considered based on a predefined *search text*
+
+```{r 2, include=FALSE}
+api_key <- NULL
+query <- "((Rstudio[Title/Abstract]) OR (R programming language[Title/Abstract])"
+res <- pmQueryTotalCount(query = query, api_key = api_key)
+res$total_count
+```
+
+An API key is required to better and faster searches. Nevertheless, NULL can be put instead of a specific value.
+
+As, RStudio and R programming language are interchangeably used, then both of them are considered in search strategy. After determining the search strategy we searched and finally found `r res$total_count` documents based on searched terms including articles, book chapters, conference papers and etc.
+
+Now, this data set is necessary to be converted to data frame for statistical analyses. In order to, the following commands are used.
+
+```{r 3}
+D <- pmApiRequest(query = query, res$total_count, api_key = NULL)
+M <- pmApi2df(D)
+M <- convert2df(D, dbsource = "pubmed", format = "api")
+```
+
+Now we use the following commands to get an overview of the data. This information can be gattered in a table suitable for html files. Some attributes like cell positions, cell alignment and so on can be set with different arguments of *kable function*.
+
+```{r 44, eval=FALSE}
+results <- biblioAnalysis(M)
+```
+
+Sometimes, researchers may prefer TO do their analysis in a specific type of document, as only articles. On the other hand, since Rstudio company have been found in 2011, searches are limited to after 2011.
+
+```{r 55}
+M <- filter(M, M$DT == "JOURNAL ARTICLE" & M$PY >= 2011)
+results <- biblioAnalysis(M)
+```
+
+```{r 54, echo=TRUE, results='hide'}
+a <- summary(results)
+```
+
+```{r 5}
+knitr::kable(a$MainInformationDF, caption = "Main information of articles",align = "llccl", format = "html") %>% 
+    kable_classic(full_width = F, position = "center")
+```
+
+# General information about scientific documents
+
+Here, we can look at some tables and plots which are distracted from data set based on our **search strategy**.
+
+## Scientific documents production year by year
+
+```{r 7, paged.print=TRUE}
+knitr::kable(a$AnnualProduction, caption = 
+           "Annualy Production for scientific Documents",
+           align = "cc", format = "html") %>%
+           kable_classic(full_width = F, position = "center")
+```
+
+Based on this table, it seems that number of published documents has increased in recent years. Maybe because of Covid-19 pandemi.
+
+## Top 10 Authors of **PubMed papers** analyzed by *Rstudio*
+
+Lets take a look at top 10 authors and some indexes like **number of articles** and **articles fractionalized**.
+
+```{r 8, paged.print=TRUE}
+knitr::kable(a$MostProdAuthors, caption = "Top 10 Authors", align = "lclc", format = "html") %>% kable_classic(full_width = F, position = "center")
+```
+
+## Top 10 most cited papers of **PubMed papers** analyzed by *Rstudio*
+
+```{r 9, paged.print=TRUE}
+knitr::kable(a$MostCitedPapers[,1:2], caption = "10 Most Cited Papers",  
+             align = "ll",format = "html") %>%  
+    kable_classic(full_width = F, position = "center")
+```
+
+10 most cited papers are seen in the following table.
+
+## Top 10 journals in of **PubMed papers** analyzed by *Rstudio*
+
+Here, we can see top 10 journals based on their frequency of published documents. Apparently, **PLOS ONE** and **BIOINFORMATICS** are prominent in this field.
+
+```{r 10, paged.print=TRUE}
+knitr::kable(a$MostRelSources, caption = "Top 10 Journals", align =       
+        "lc", format = "html") %>% kable_classic(full_width = F, position = "center")
+```
+
+## Top 10 keywords: **DE** and **ID** of **PubMed papers** analyzed by *Rstudio*
+
+Here, we can see top 10 keywords based on their frequency of published documents. **important** We should notice that there are two types of keywords which we investigate them separately. **DE**s are keywords extracted from article. **ID**s are keywords of references of articles.
+
+```{r 11, paged.print=TRUE}
+knitr::kable(a$MostRelKeywords, caption = "Top 10 Keywords", align = "lclc", format = "html") %>%
+     add_footnote(c("DE: Keywords Extracted from Articles","ID: Keywords
+     Extracted from References of Articles"), notation="alphabet") %>%  
+     kable_classic(position = "center")
+```
+
+## Top 10 authors and their timeline production
+
+```{r 12}
+res <- authorProdOverTime(M, k=10)
+knitr::kable(res$dfAU[1:3], caption = "Top 10 authors and their timeline,as well annually production, total citations, total citations per year", format = "html") %>% kable_classic(position = "center")
+```
+
+## Timeline production of best journal of **PubMed papers** analyzed by *Rstudio*
+
+```{r 13}
+topSO = sourceGrowth(M, top=1, cdf=FALSE)
+DF = melt(topSO, id='Year')
+ggplot(DF,aes(Year,value, group=variable, color=variable))+geom_line()
+topSO = sourceGrowth(M, top=3, cdf=FALSE)
+DF = melt(topSO, id='Year')
+```
+
+## Some Information about Top 10 Authors
+
+```{r 14, paged.print=TRUE}
+DF = dominance(results)
+knitr::kable(DF, caption = "Some Information about Top 10 Authors", digits = 3, align = "lccccccc", format = "html") %>%
+    kable_classic(position = "center")       
+```
+
+*Dominance factor* indicates the ratio of first authored papers to total of articles for top 10 authors.
+
+## Top countries based on frequency of publications in their journals
+
+```{r 15, paged.print=TRUE}
+knitr::kable(head(sort(table(M$SO_CO),decreasing=TRUE),10), caption = "Top Countries based on Frequency of published articles in Journals", col.names =         c("Country", "Frequency"), align = "lc", format = "html") %>%
+        kable_classic(full_width = F, position = "center" )
+```
+
+As can be seen, United states and England are two prominent countries based on publishing articles.
+
+# What does say Lotka's Law us about these data set?
+
+```{r 16, paged.print=TRUE}
+L=lotka(results)
+lotkaTable=cbind(L$AuthorProd[,1],L$AuthorProd[,2],L$AuthorProd[,3],L$fitted)
+knitr::kable(lotkaTable, caption = "Frequency Of Authors Based on Lotka's Law", digits = 3, align = "cccc", format = "html",col.names = c("Number of article", "Number of authors", "Frequency based on data", "Frequency based on Lotka's law")) %>%
+    kable_classic(full_width = F, position = "center")
+```
+
+Pvalue of two-sample Kolmogorov-Smirnov test between the frequency based on data and the Lotka's Law is `r L$p.value`. In significance level of 0.05, this value says us that our data do not follow Lotka's law.
+
+# Collaboration networks for authors
+
+Collaboration network of authors are plotted. As well, the network can be plotted for keywords, universities and countries.
+
+```{r 17,fig.width=10, fig.height=10}
+NetMatrix <- biblioNetwork(M, analysis = "collaboration", 
+                         network = "authors", sep = ";")
+net <- networkPlot(NetMatrix, n = 10, type = "auto", Title = "collaboration Network",labelsize=1, halo = TRUE) 
+```
+
+# Thematic map
+
+Thematic Maps are plotted based on (keywords) **DE** AS follows:
+
+```{r 18, fig.width=12, fig.height=12, warning = FALSE}
+remove.terms.1word = c("aged","map","allergy","demand","rest","workflow","data collection","r","rstudio","data analysis","conservation","review","functional",
+    "clinical","identification","data","analysis","network","systematic","r programming","r package","maternal","reproducibility","r language","methods","treatment","r programming language","sars-cov-2","retention","calcium","statistics","open source","quality","methodology","complications","statistical analysis","prognosis","algorithms","software")
+
+synonyms1 <- c("covid-19;coronavirus","gene; genes", "prediction; predicting", "modeling; modelling; resting","emotion; emotional", "adhd; hyperactivity",
+      "differentially expressed genes;differentially expressed")
+tm1 = thematicMap(M, field = "DE",n.labels = 2, ngrams = 1, remove.terms = remove.terms.1word,synonyms = synonyms1)
+plot(tm1$map)
+```
+
+Thematic map is a plot which has been divided to four quadrant: *Niche Themes*, *Motor Themes*, *Basic Themes* and *Emerging or declining Themes*. For more details refer to [@zhang2022].
+
+**Motor Themes**: Quadrant I, located in the upper-right quadrant, named motor\
+themes, suggested that the themes of the quadrant have developed\
+and formed important pillars that shape the field of research.
+
+**Niche Themes**: Quadrant II, located in the upper left quadrant, named niche themes, reflected highly developed but isolated themes.
+
+**Emerging or declining Themes**: Quadrant III, located in the lower-left\
+quadrant and named emerging or declining themes, suggested weak development and marginalization of the research field.
+
+**Basic Themes**: Quadrant IV, located in the lower-right quadrant, was named as basic themes. Although these topics are less developed, they are important to the field of study.
+
+Some diseases (motor themes), like obesity, covid_19, schizophernia, cancer, tuberculosis are discussed well and highly developed and analyzed by **Rstudio**. on the other side, some statistical and analytical topics such as machine learning, pca (principal component analysis), bibliometrics and bioinformatic analysis.
+
+some diseases (basic themes) like type 2 diabetes mellitus, stroke, differentially expressed genes need to be considered and analyzed more than the present by **rstudio**, as well as meta analysis, systematic review, network analysis and computational analysis are methods which is reccommedned to use.
+
+Based on this map, there are some themes which have been over discussed (topics covered by niche themes quadrant) in PubMed database. Topics such as, natural language processing, text mining, Pan-Cancer, behavioral science etc. As well, themes in quadrant lll, for example visualization and shiny are of declining themes.
+
+**Explanation**: some words which we don't want to be included in the map, as well synonym words are predefined.
+
+# Associations among our information
+
+Here, we can see association among Authors, DEs and Journals.
+
+```{r 19, fig.height=12, fig.width=12}
+threeFieldsPlot(M)
+```
+
+This plot shows how keywords, authors and journals are related to each other.
+
+# Thematic Evolution Plot
+
+Here, We can See Evolution of Topics in **RStudio applications** field based on **DE** and **TI.**
+
+This plot shows themes which have been evolutted during the years.
+
+```{r 20, fig.height=12, fig.width=12}
+years=c(2019)
+
+nexus <- thematicEvolution(M,field="DE",years=years,n=100,
+          minFreq=3, ngrams = 1,remove.terms = remove.terms.1word,
+          synonyms = synonyms1)
+plotThematicEvolution(nexus$Nodes,nexus$Edges)
+
+nexus <- thematicEvolution(M,field="TI",years=years,n=100,
+          minFreq=3, ngrams = 2,remove.terms = remove.terms.1word,
+          synonyms = synonyms1)
+plotThematicEvolution(nexus$Nodes,nexus$Edges)
+```
+
+**References:**

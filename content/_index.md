@@ -2,7 +2,7 @@
 action_label: Read More &rarr;
 action_link: /about
 action_type: text
-description: I am a statistician and data analyst. I love to extract insightful information from each type of data and turn them into wisdom. The main tool in this way for me is **R programming language**. *R* is like the languages I speak. However, most of statistical topics covers data science field and each statistician can be a data scientist; yet I would rather call myself a data student. Because it reminds me that I must be always in learning.
+description: I am a statistician and data analyst. I love to extract insightful information from each type of data and turn them into wisdom. The main tool in this way for me is **R programming language**. *R* is like the languages I speak. However, most of statistical topics covers data science field and each statistician can be a data scientist; yet I would rather call myself a data student. Because it reminds me that I have to be always in learning.
  
 image_left: true
 images:

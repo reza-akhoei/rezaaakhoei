@@ -1,50 +1,64 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Reza Khoei on My personal website</title>
-    <link>/</link>
-    <description>Recent content in Reza Khoei on My personal website</description>
+    <title>Reza Khoei</title>
+    <link>https://rezaaakhoei.rbind.io/</link>
+    <description>Recent content on Reza Khoei</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 16 Oct 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 22 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://rezaaakhoei.rbind.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Guns, germs and steel</title>
+      <link>https://rezaaakhoei.rbind.io/blog/2023-07-22-guns-germs-and-steel/</link>
+      <pubDate>Sat, 22 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://rezaaakhoei.rbind.io/blog/2023-07-22-guns-germs-and-steel/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Text Mining of Rubaiyat of Omar Khayyam using R</title>
+      <link>https://rezaaakhoei.rbind.io/blog/2023-01-10-text-mining-of-khayyam-s-poems-using-r/</link>
+      <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://rezaaakhoei.rbind.io/blog/2023-01-10-text-mining-of-khayyam-s-poems-using-r/</guid>
+      <description>IntroductionKhayyam was an Iranian astronomer, mathematician,philosopher and a poet , which is commonly known for his quatrains (short poems). He was almost unknown to whole world, till 19th century, but thanks to EdwardFitzGerald, his poems were translated to English and published entitled Rubaiyat of Omar Khayyam.Although, his achievements in astronomy and mathematics such as solar calender and cubic equation are admirable, nonetheless, world realized who he really is, because of the hidden amazing philosophy in his poems.</description>
+    </item>
+    
+    <item>
+      <title>Resume</title>
+      <link>https://rezaaakhoei.rbind.io/resume/2022-12-28-resume/</link>
+      <pubDate>Wed, 28 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://rezaaakhoei.rbind.io/resume/2022-12-28-resume/</guid>
+      <description>1 Aside1.1 Contact Info1.2 Skills1.3 Disclaimer2 Main2.1 Reza Ali Akbari Khoei2.1.1 Currently searching for a assistant professor position2.2 Education2.2.1 University of Tabriz2.2.2 University of Social Welfare and Rehabilitation Sciences2.2.3 Tarbiat Modares University2.3 Research Experience2.3.1 Statistician and Biostatistician2.4 Professional Experience2.4.1 Biostatistician2.5 Teaching Experience2.5.1 Basics of Survival Analysis Medical Researchers2.5.2 Statistical Methods using SPSS and G-Power (Virtual School of Statistics) for Interested Medical Researchers (5 day Workshop)2.</description>
+    </item>
+    
     <item>
       <title>Scientometrics Analysis of RStudio applications in PubMed Database</title>
-      <link>/blog/2022-10-16-scientometrics-analysis-of-rstudio-applications-in-pubmed-database/</link>
+      <link>https://rezaaakhoei.rbind.io/blog/2022-10-16-scientometrics-analysis-of-rstudio-applications-in-pubmed-database/</link>
       <pubDate>Sun, 16 Oct 2022 00:00:00 +0000</pubDate>
       
-      <guid>/blog/2022-10-16-scientometrics-analysis-of-rstudio-applications-in-pubmed-database/</guid>
+      <guid>https://rezaaakhoei.rbind.io/blog/2022-10-16-scientometrics-analysis-of-rstudio-applications-in-pubmed-database/</guid>
       <description>IntroductionEvaluation and interpretation of scientific productions can be so helpful in determination of prominent authors, active departments and hot topics in a specific field. This process is called scientometrics and bibliometrix. Scientometrics refers to “all quantitative aspects science and scientific research” (Sengupta 1992). On the other hand, Bibliometrics refers to “the application of mathematics and statistical methods to books and other forms of written communication” (Pritchard 1969). Visualization and Statistical methods of these published documents can be analyzed using R bibliometrix package.</description>
     </item>
     
     <item>
-      <title>Contact</title>
-      <link>/contact/</link>
-      <pubDate>Mon, 25 Feb 2019 13:38:41 -0600</pubDate>
-      
-      <guid>/contact/</guid>
-      <description>** Contact page don&amp;rsquo;t contain a body, just the front matter above. See form.html in the layouts folder.
-Formspree requires a (free) account and new form to be set up. The link is made on the final published url in the field: Restrict to Domain. It is possible to register up to 2 emails free and you can select which one you want the forms to go to within Formspree in the Settings tab.</description>
-    </item>
-    
-    <item>
-      <title>Contributors</title>
-      <link>/contributors/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/contributors/</guid>
-      <description>Thank you to all the folks who have contributed both technical and creative skills to this project:
-Desirée De Leon 🦒 (designed 5 of the custom color themes, made illustrations for the workshop, and provided general aesthetic feedback along the way)
-Garrick Aden-Buie 🧙‍♀️ (debugged headroom.js and lent his panelset.js code to the theme)
-Allison Horst 🐕 (awesome illustrations of campfires, seedlings, and evergreens, as well as my R Markdown hedgehog mascot 🦔)</description>
-    </item>
-    
-    <item>
       <title>License</title>
-      <link>/license/</link>
+      <link>https://rezaaakhoei.rbind.io/license/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/license/</guid>
+      <guid>https://rezaaakhoei.rbind.io/license/</guid>
       <description>My blog posts are released under a Creative Commons Attribution-ShareAlike 4.0 International License.</description>
+    </item>
+    
+    <item>
+      <title>Resume</title>
+      <link>https://rezaaakhoei.rbind.io/resume/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://rezaaakhoei.rbind.io/resume/</guid>
+      <description></description>
     </item>
     
   </channel>
